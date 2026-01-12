@@ -112,7 +112,7 @@ export default function FindSalonPage() {
       {/* Mobile Layout */}
       <div className="lg:hidden min-h-screen bg-gray-50">
         {/* Search Bar - Fixed */}
-        <div className="sticky top-0 z-20 bg-white border-b border-gray-200 shadow-sm">
+        <div className="sticky top-0 z-20 bg-white text-black border-b border-gray-200 shadow-sm">
           <div className="p-4">
             <div className="relative">
               <input

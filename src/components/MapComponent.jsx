@@ -1,89 +1,96 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from 'react-leaflet';
-import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-
-if (typeof window !== 'undefined') {
-  delete L.Icon.Default.prototype._getIconUrl;
-  L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  });
-}
-
-const createCustomIcon = (waitTime) => {
-  const time = parseInt(waitTime);
-  let color = '#10B981';
-  if (time > 30) color = '#EF4444';
-  else if (time > 15) color = '#F59E0B';
-
-  const svgIcon = `
-    <svg width="40" height="50" viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 0C12.28 0 6 6.28 6 14c0 10.5 14 26 14 26s14-15.5 14-26c0-7.72-6.28-14-14-14z" 
-            fill="${color}" stroke="#fff" stroke-width="2"/>
-      <circle cx="20" cy="14" r="6" fill="#fff"/>
-      <text x="20" y="18" text-anchor="middle" font-size="10" font-weight="bold" fill="${color}">
-        ${waitTime}
-      </text>
-    </svg>
-  `;
-
-  return L.divIcon({
-    html: svgIcon,
-    className: 'custom-marker',
-    iconSize: [40, 50],
-    iconAnchor: [20, 50],
-    popupAnchor: [0, -50]
-  });
-};
-
-// User location icon - Simple blue dot like Google Maps
-const createUserLocationIcon = () => {
-  return L.divIcon({
-    html: `
-      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <!-- Blue dot -->
-        <circle cx="12" cy="12" r="8" fill="#4285F4" stroke="white" stroke-width="3" />
-      </svg>
-    `,
-    className: 'user-location-marker',
-    iconSize: [24, 24],
-    iconAnchor: [12, 12],
-    popupAnchor: [0, -12]
-  });
-};
-
-function MapController({ center, zoom }) {
-  const map = useMap();
-  
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      map.invalidateSize();
-    }, 100);
-    
-    return () => clearTimeout(timer);
-  }, [map]);
-  
-  useEffect(() => {
-    if (center) {
-      map.setView(center, zoom || 13);
-    }
-  }, [center, zoom, map]);
-  
-  return null;
-}
 
 export default function MapComponent({ salons, mapCenter, mapZoom, selectedSalon, setSelectedSalon, onCheckIn, userLocation }) {
   const [isMounted, setIsMounted] = useState(false);
+  const [L, setL] = useState(null);
 
   useEffect(() => {
-    setIsMounted(true);
+    // Import leaflet only on client side
+    import('leaflet').then((leaflet) => {
+      setL(leaflet.default);
+      
+      // Fix default marker icons
+      delete leaflet.default.Icon.Default.prototype._getIconUrl;
+      leaflet.default.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+      });
+      
+      setIsMounted(true);
+    });
   }, []);
 
-  // Show loading until mounted
-  if (!isMounted) {
+  const createCustomIcon = (waitTime) => {
+    if (!L) return null;
+    
+    const time = parseInt(waitTime);
+    let color = '#10B981';
+    if (time > 30) color = '#EF4444';
+    else if (time > 15) color = '#F59E0B';
+
+    const svgIcon = `
+      <svg width="40" height="50" viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 0C12.28 0 6 6.28 6 14c0 10.5 14 26 14 26s14-15.5 14-26c0-7.72-6.28-14-14-14z" 
+              fill="${color}" stroke="#fff" stroke-width="2"/>
+        <circle cx="20" cy="14" r="6" fill="#fff"/>
+        <text x="20" y="18" text-anchor="middle" font-size="10" font-weight="bold" fill="${color}">
+          ${waitTime}
+        </text>
+      </svg>
+    `;
+
+    return L.divIcon({
+      html: svgIcon,
+      className: 'custom-marker',
+      iconSize: [40, 50],
+      iconAnchor: [20, 50],
+      popupAnchor: [0, -50]
+    });
+  };
+
+  const createUserLocationIcon = () => {
+    if (!L) return null;
+    
+    return L.divIcon({
+      html: `
+        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="8" fill="#4285F4" stroke="white" stroke-width="3" />
+        </svg>
+      `,
+      className: 'user-location-marker',
+      iconSize: [24, 24],
+      iconAnchor: [12, 12],
+      popupAnchor: [0, -12]
+    });
+  };
+
+  function MapController({ center, zoom }) {
+    const map = useMap();
+    
+    useEffect(() => {
+      if (!map) return;
+      
+      const timer = setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }, [map]);
+    
+    useEffect(() => {
+      if (center && map) {
+        map.setView(center, zoom || 13);
+      }
+    }, [center, zoom, map]);
+    
+    return null;
+  }
+
+  if (!isMounted || !L) {
     return (
       <div className="flex items-center justify-center h-full w-full bg-gray-100">
         <div className="text-center">
@@ -112,7 +119,6 @@ export default function MapComponent({ salons, mapCenter, mapZoom, selectedSalon
       {/* User Location - Circle + Blue Dot */}
       {userLocation && (
         <>
-          {/* Accuracy Circle */}
           <Circle
             center={userLocation}
             radius={100}
@@ -125,7 +131,6 @@ export default function MapComponent({ salons, mapCenter, mapZoom, selectedSalon
             }}
           />
           
-          {/* Blue Dot Marker */}
           <Marker
             position={userLocation}
             icon={createUserLocationIcon()}

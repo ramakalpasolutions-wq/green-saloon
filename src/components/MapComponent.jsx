@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -39,6 +39,28 @@ const createCustomIcon = (waitTime) => {
   });
 };
 
+// User location icon
+// User location icon - Google Maps style pointer
+// User location icon - Single Google Maps style pointer
+// User location icon - Simple blue dot like Google Maps
+const createUserLocationIcon = () => {
+  return L.divIcon({
+    html: `
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <!-- Blue dot -->
+        <circle cx="12" cy="12" r="8" fill="#4285F4" stroke="white" stroke-width="3" />
+      </svg>
+    `,
+    className: 'user-location-marker',
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    popupAnchor: [0, -12]
+  });
+};
+
+
+
+
 function MapController({ center, zoom }) {
   const map = useMap();
   
@@ -59,16 +81,17 @@ function MapController({ center, zoom }) {
   return null;
 }
 
-export default function MapComponent({ salons, mapCenter, mapZoom, selectedSalon, setSelectedSalon, onCheckIn }) {
+export default function MapComponent({ salons, mapCenter, mapZoom, selectedSalon, setSelectedSalon, onCheckIn, userLocation }) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  // Show loading until mounted
   if (!isMounted) {
     return (
-      <div className="flex items-center justify-center h-full bg-gray-100">
+      <div className="flex items-center justify-center h-full w-full bg-gray-100">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading map...</p>
@@ -92,6 +115,38 @@ export default function MapComponent({ salons, mapCenter, mapZoom, selectedSalon
       
       <MapController center={mapCenter} zoom={mapZoom} />
 
+      {/* User Location Marker with Circle */}
+      {userLocation && (
+        <>
+          <Circle
+            center={userLocation}
+            radius={100}
+            pathOptions={{
+              color: '#3B82F6',
+              fillColor: '#3B82F6',
+              fillOpacity: 0.1,
+              weight: 2,
+              opacity: 0.5
+            }}
+          />
+          <Marker
+            position={userLocation}
+            icon={createUserLocationIcon()}
+            zIndexOffset={1000}
+          >
+            <Popup>
+              <div className="p-2">
+                <p className="font-semibold text-blue-600 flex items-center gap-1">
+                  <span>📍</span>
+                  <span>You are here</span>
+                </p>
+              </div>
+            </Popup>
+          </Marker>
+        </>
+      )}
+
+      {/* Salon Markers */}
       {salons.map((salon) => (
         <Marker
           key={salon.id}

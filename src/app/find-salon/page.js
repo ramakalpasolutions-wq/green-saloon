@@ -346,12 +346,14 @@ export default function FindSalonPage() {
         {/* Right Side - Leaflet Map */}
         <div className="flex-1 relative hidden lg:block">
           <MapComponent 
-            salons={salons}
-            mapCenter={mapCenter}
-            mapZoom={mapZoom}
-            selectedSalon={selectedSalon}
-            setSelectedSalon={setSelectedSalon}
-          />
+  salons={salons}
+  mapCenter={mapCenter}
+  mapZoom={mapZoom}
+  selectedSalon={selectedSalon}
+  setSelectedSalon={setSelectedSalon}
+  onCheckIn={handleCheckIn}  // Add this line
+/>
+
         </div>
 
         {/* Mobile Map View Button */}

@@ -51,7 +51,7 @@ function MapController({ center, zoom }) {
   return null;
 }
 
-export default function MapComponent({ salons, mapCenter, mapZoom, selectedSalon, setSelectedSalon }) {
+export default function MapComponent({ salons, mapCenter, mapZoom, selectedSalon, setSelectedSalon, onCheckIn }) {
   return (
     <MapContainer
       center={mapCenter}
@@ -91,7 +91,12 @@ export default function MapComponent({ salons, mapCenter, mapZoom, selectedSalon
               </div>
               <button 
                 className="w-full bg-emerald-600 text-white py-2 px-3 rounded text-xs font-semibold hover:bg-emerald-700"
-                onClick={() => console.log('Check in to:', salon.name)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onCheckIn) {
+                    onCheckIn(salon);
+                  }
+                }}
               >
                 Check In
               </button>

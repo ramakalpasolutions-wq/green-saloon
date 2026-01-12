@@ -1,9 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import toast from 'react-hot-toast';
+import { bookingService } from '@/utils/bookingService';
+import Image from 'next/image';
 
 export default function CheckInModal({ salon, isOpen, onClose }) {
-  const [step, setStep] = useState(1); // Now: 1: Phone, 2: DateTime, 3: Services, 4: Staff, 5: Confirmation
+  const [step, setStep] = useState(1);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
@@ -19,12 +21,41 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
     { id: 6, name: "Hair Spa", price: "₹999", duration: "60 min" }
   ];
 
-  const staff = [
-    { id: 1, name: "Rajesh Kumar", role: "Master Stylist", experience: "15+ years", image: "👨‍🦱", rating: 4.8 },
-    { id: 2, name: "Sanjay Reddy", role: "Senior Stylist", experience: "10+ years", image: "👨‍🦰", rating: 4.7 },
-    { id: 3, name: "Venkat Rao", role: "Beard Specialist", experience: "8+ years", image: "🧔", rating: 4.9 },
-    { id: 4, name: "Kiran Babu", role: "Hair Color Expert", experience: "12+ years", image: "👨‍🦳", rating: 4.6 }
+  // All 20 staff members with real photos from Unsplash
+  const allStaff = [
+    { id: 1, name: "Rajesh Kumar", role: "Master Stylist", experience: "15+ years", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 2, name: "Sanjay Reddy", role: "Senior Stylist", experience: "10+ years", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 3, name: "Venkat Rao", role: "Beard Specialist", experience: "8+ years", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 4, name: "Kiran Babu", role: "Hair Color Expert", experience: "12+ years", image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=150&h=150&fit=crop", rating: 4.7 },
+    { id: 5, name: "Arun Kumar", role: "Master Stylist", experience: "14+ years", image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 6, name: "Prakash Rao", role: "Senior Stylist", experience: "9+ years", image: "https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=150&h=150&fit=crop", rating: 4.6 },
+    { id: 7, name: "Suresh Babu", role: "Fade Expert", experience: "11+ years", image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 8, name: "Ramesh Kumar", role: "Hair Specialist", experience: "13+ years", image: "https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=150&h=150&fit=crop", rating: 4.7 },
+    { id: 9, name: "Vijay Prakash", role: "Master Barber", experience: "16+ years", image: "https://images.unsplash.com/photo-1507081323647-4d250478b919?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 10, name: "Kumar Raja", role: "Style Expert", experience: "10+ years", image: "https://images.unsplash.com/photo-1531891437562-4301cf35b7e4?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 11, name: "Dinesh Kumar", role: "Senior Stylist", experience: "12+ years", image: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=150&h=150&fit=crop", rating: 4.7 },
+    { id: 12, name: "Anand Raj", role: "Beard Artist", experience: "8+ years", image: "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 13, name: "Mohan Krishna", role: "Hair Expert", experience: "11+ years", image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&h=150&fit=crop", rating: 4.6 },
+    { id: 14, name: "Ashok Kumar", role: "Master Stylist", experience: "15+ years", image: "https://images.unsplash.com/photo-1504199367641-aba8151af406?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 15, name: "Gopal Reddy", role: "Senior Barber", experience: "13+ years", image: "https://images.unsplash.com/photo-1521119989659-a83eee488004?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 16, name: "Srinivas Rao", role: "Style Master", experience: "14+ years", image: "https://images.unsplash.com/photo-1522556189639-b150ed9c4330?w=150&h=150&fit=crop", rating: 4.7 },
+    { id: 17, name: "Naveen Kumar", role: "Hair Specialist", experience: "9+ years", image: "https://images.unsplash.com/photo-1474176857210-7287d38d27c6?w=150&h=150&fit=crop", rating: 4.6 },
+    { id: 18, name: "Harish Babu", role: "Fade Specialist", experience: "10+ years", image: "https://images.unsplash.com/photo-1488161628813-04466f872be2?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 19, name: "Ravi Kumar", role: "Senior Stylist", experience: "12+ years", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop", rating: 4.7 },
+    { id: 20, name: "Manoj Reddy", role: "Master Barber", experience: "16+ years", image: "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=150&h=150&fit=crop", rating: 4.9 }
   ];
+
+  // Get 3-5 random staff for this salon (consistent per salon ID)
+  const salonStaff = useMemo(() => {
+    if (!salon?.id) return allStaff.slice(0, 4);
+    
+    // Use salon ID as seed for consistent staff assignment
+    const seed = salon.id;
+    const staffCount = 3 + (seed % 3); // 3-5 staff
+    const startIndex = (seed * 3) % (allStaff.length - 5);
+    
+    return allStaff.slice(startIndex, startIndex + staffCount);
+  }, [salon?.id]);
 
   const getNext7Days = () => {
     const days = [];
@@ -83,25 +114,51 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
     setTimeout(() => {
       toast.dismiss(loadingToast);
       
+      const queueNumber = Math.floor(Math.random() * 20) + 1;
+      const bookingId = 'GS' + Date.now().toString().slice(-6);
+      
       const bookingData = {
+        id: bookingId,
         phone: phoneNumber,
-        salon: salon?.name,
-        date: selectedDate,
-        time: selectedTime,
-        services: selectedServices.map(id => services.find(s => s.id === id).name),
-        staff: staff.find(s => s.id === selectedStaff)?.name,
-        total: getTotalPrice()
+        salonName: salon?.name || 'Green Saloon',
+        address: salon?.address || '',
+        date: selectedDate || new Date().toISOString().split('T')[0],
+        time: selectedTime || 'Walk-in',
+        status: 'confirmed',
+        queueNumber: queueNumber,
+        waitTime: salon?.waitTime || 15,
+        services: selectedServices.length > 0 
+          ? selectedServices.map(id => {
+              const service = services.find(s => s.id === id);
+              return service.name;
+            })
+          : ['Walk-in service'],
+        staff: selectedStaff 
+          ? salonStaff.find(s => s.id === selectedStaff)?.name
+          : 'Any available',
+        total: getTotalPrice(),
+        salonId: salon?.id
       };
       
-      console.log('Booking confirmed:', bookingData);
+      // Save booking to localStorage
+      bookingService.addBooking(bookingData);
       
-      toast.success(
-        `Booking confirmed! SMS sent to +91 ${phoneNumber}`,
-        {
-          duration: 4000,
-          icon: '✅',
-        }
-      );
+      console.log('Booking confirmed and saved:', bookingData);
+      
+      toast.success('Booking confirmed!', {
+        duration: 2000,
+        icon: '✅',
+      });
+      
+      // Redirect to status page
+      const queryParams = new URLSearchParams({
+        id: bookingId,
+        salon: salon?.name || 'Green Saloon',
+        queue: queueNumber.toString(),
+        wait: (salon?.waitTime || 15).toString()
+      });
+      
+      window.location.href = `/booking-status?${queryParams.toString()}`;
       
       onClose();
       resetForm();
@@ -126,21 +183,26 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
       toast.error('Please select both date and time');
       return;
     }
-    if (step === 3 && selectedServices.length === 0) {
-      toast.error('Please select at least one service');
-      return;
-    }
-    if (step === 4 && !selectedStaff) {
-      toast.error('Please select a staff member');
-      return;
-    }
     
     if (step < 5) {
       setStep(step + 1);
-      toast.success(`Step ${step} completed!`, { icon: '👍' });
+      if (step === 1) {
+        toast.success('Phone number verified!', { icon: '📱' });
+      }
     } else {
       handleConfirm();
     }
+  };
+
+  const handleSkip = () => {
+    if (step === 2) {
+      toast('Skipped appointment time - Walk-in mode', { icon: 'ℹ️' });
+    } else if (step === 3) {
+      toast('Skipped service selection', { icon: 'ℹ️' });
+    } else if (step === 4) {
+      toast('No staff preference - Any available stylist', { icon: 'ℹ️' });
+    }
+    setStep(step + 1);
   };
 
   const getStepTitle = () => {
@@ -171,6 +233,7 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
             onClick={() => {
               onClose();
               toast('Booking cancelled', { icon: '❌' });
+              resetForm();
             }}
             className="text-gray-400 hover:text-gray-600 p-2"
           >
@@ -272,6 +335,12 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
           {/* Step 2: Date & Time */}
           {step === 2 && (
             <div className="space-y-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <p className="text-sm text-blue-800">
+                  <strong>💡 Tip:</strong> Skip this step if you want to walk-in directly without appointment
+                </p>
+              </div>
+
               <div>
                 <h3 className="text-lg font-bold text-gray-900 mb-4">Select Date</h3>
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-3">
@@ -320,6 +389,12 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
           {/* Step 3: Services */}
           {step === 3 && (
             <div>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <p className="text-sm text-blue-800">
+                  <strong>💡 Tip:</strong> Skip to choose services at the salon
+                </p>
+              </div>
+
               <h3 className="text-lg font-bold text-gray-900 mb-4">Choose Services</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {services.map((service) => (
@@ -370,9 +445,17 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
           {/* Step 4: Staff */}
           {step === 4 && (
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Select Your Stylist</h3>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <p className="text-sm text-blue-800">
+                  <strong>💡 Tip:</strong> Skip to get any available stylist
+                </p>
+              </div>
+
+              <h3 className="text-lg font-bold text-gray-900 mb-4">
+                Select Your Stylist ({salonStaff.length} available)
+              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {staff.map((member) => (
+                {salonStaff.map((member) => (
                   <button
                     key={member.id}
                     onClick={() => setSelectedStaff(member.id)}
@@ -383,7 +466,14 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
                     }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div className="text-4xl">{member.image}</div>
+                      <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-gray-200">
+                        <Image
+                          src={member.image}
+                          alt={member.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
                       <div className="flex-1">
                         <h4 className="font-bold text-gray-900">{member.name}</h4>
                         <p className="text-sm text-emerald-600 font-medium">{member.role}</p>
@@ -432,35 +522,58 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
 
                 <div className="bg-gray-50 rounded-xl p-4">
                   <h4 className="font-semibold text-gray-900 mb-2">📅 Date & Time</h4>
-                  <p className="text-gray-600">{new Date(selectedDate).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                  <p className="text-gray-600 font-medium">{selectedTime}</p>
+                  {selectedDate && selectedTime ? (
+                    <>
+                      <p className="text-gray-600">{new Date(selectedDate).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                      <p className="text-gray-600 font-medium">{selectedTime}</p>
+                    </>
+                  ) : (
+                    <p className="text-gray-600 italic">Walk-in (No appointment)</p>
+                  )}
                 </div>
 
                 <div className="bg-gray-50 rounded-xl p-4">
                   <h4 className="font-semibold text-gray-900 mb-2">✂️ Services</h4>
-                  {services.filter(s => selectedServices.includes(s.id)).map(service => (
-                    <div key={service.id} className="flex justify-between text-sm text-gray-600 mb-1">
-                      <span>{service.name}</span>
-                      <span className="font-medium">{service.price}</span>
-                    </div>
-                  ))}
-                  <div className="border-t border-gray-300 mt-2 pt-2 flex justify-between font-bold text-gray-900">
-                    <span>Total</span>
-                    <span className="text-emerald-600">₹{getTotalPrice()}</span>
-                  </div>
+                  {selectedServices.length > 0 ? (
+                    <>
+                      {services.filter(s => selectedServices.includes(s.id)).map(service => (
+                        <div key={service.id} className="flex justify-between text-sm text-gray-600 mb-1">
+                          <span>{service.name}</span>
+                          <span className="font-medium">{service.price}</span>
+                        </div>
+                      ))}
+                      <div className="border-t border-gray-300 mt-2 pt-2 flex justify-between font-bold text-gray-900">
+                        <span>Total</span>
+                        <span className="text-emerald-600">₹{getTotalPrice()}</span>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-gray-600 italic">To be decided at salon</p>
+                  )}
                 </div>
 
                 <div className="bg-gray-50 rounded-xl p-4">
                   <h4 className="font-semibold text-gray-900 mb-2">👨‍🦱 Your Stylist</h4>
-                  {staff.filter(s => s.id === selectedStaff).map(member => (
-                    <div key={member.id} className="flex items-center gap-3">
-                      <span className="text-3xl">{member.image}</span>
-                      <div>
-                        <p className="font-medium text-gray-900">{member.name}</p>
-                        <p className="text-sm text-gray-600">{member.role}</p>
+                  {selectedStaff ? (
+                    salonStaff.filter(s => s.id === selectedStaff).map(member => (
+                      <div key={member.id} className="flex items-center gap-3">
+                        <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-200">
+                          <Image
+                            src={member.image}
+                            alt={member.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">{member.name}</p>
+                          <p className="text-sm text-gray-600">{member.role}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <p className="text-gray-600 italic">Any available stylist</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -468,21 +581,39 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
         </div>
 
         {/* Footer Buttons */}
-        <div className="p-4 sm:p-6 border-t border-gray-200 flex gap-3">
-          {step > 1 && (
+        <div className="p-4 sm:p-6 border-t border-gray-200">
+          <div className="flex gap-3">
+            {step > 1 && (
+              <button
+                onClick={() => setStep(step - 1)}
+                className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+              >
+                Back
+              </button>
+            )}
+            
+            {/* Skip button - only show on steps 2, 3, 4 */}
+            {step >= 2 && step <= 4 && (
+              <button
+                onClick={handleSkip}
+                className="px-6 py-3 border-2 border-orange-300 text-orange-600 rounded-lg hover:bg-orange-50 transition font-semibold"
+              >
+                Skip
+              </button>
+            )}
+            
             <button
-              onClick={() => setStep(step - 1)}
-              className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+              onClick={handleNext}
+              disabled={step === 1 && phoneNumber.length !== 10}
+              className={`flex-1 py-3 rounded-lg font-semibold transition ${
+                step === 1 && phoneNumber.length !== 10
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg'
+              }`}
             >
-              Back
+              {step === 5 ? 'Confirm Booking' : 'Continue'}
             </button>
-          )}
-          <button
-            onClick={handleNext}
-            className="flex-1 bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition font-semibold shadow-lg"
-          >
-            {step === 5 ? 'Confirm Booking' : 'Continue'}
-          </button>
+          </div>
         </div>
       </div>
     </div>

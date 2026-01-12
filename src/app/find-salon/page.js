@@ -264,7 +264,7 @@ export default function FindSalonPage() {
       {/* Desktop Layout */}
       <div className="hidden lg:flex h-screen">
         {/* Left Sidebar */}
-        <div className="w-2/5 xl:w-1/3 bg-white overflow-y-auto border-r border-gray-200">
+        <div className="w-2/5 xl:w-1/3 bg-white text-black overflow-y-auto border-r border-gray-200">
           {/* Search Bar */}
           <div className="p-4 sm:p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
             <div className="relative">

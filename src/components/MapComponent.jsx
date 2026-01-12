@@ -24,33 +24,34 @@ export default function MapComponent({ salons, mapCenter, mapZoom, selectedSalon
     });
   }, []);
 
-  const createCustomIcon = (waitTime) => {
-    if (!L) return null;
-    
-    const time = parseInt(waitTime);
-    let color = '#10B981';
-    if (time > 30) color = '#EF4444';
-    else if (time > 15) color = '#F59E0B';
+const createCustomIcon = (waitTime) => {
+  if (typeof window === 'undefined' || !L) return null;
+  
+  const time = parseInt(waitTime);
+  let color = '#10B981';
+  if (time > 30) color = '#EF4444';
+  else if (time > 15) color = '#F59E0B';
 
-    const svgIcon = `
-      <svg width="40" height="50" viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 0C12.28 0 6 6.28 6 14c0 10.5 14 26 14 26s14-15.5 14-26c0-7.72-6.28-14-14-14z" 
-              fill="${color}" stroke="#fff" stroke-width="2"/>
-        <circle cx="20" cy="14" r="6" fill="#fff"/>
-        <text x="20" y="18" text-anchor="middle" font-size="10" font-weight="bold" fill="${color}">
-          ${waitTime}
-        </text>
-      </svg>
-    `;
+  const svgIcon = `
+    <svg width="40" height="50" viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 0C12.28 0 6 6.28 6 14c0 10.5 14 26 14 26s14-15.5 14-26c0-7.72-6.28-14-14-14z" 
+            fill="${color}" stroke="#fff" stroke-width="2"/>
+      <circle cx="20" cy="14" r="9" fill="#fff"/>
+      <text x="20" y="18" text-anchor="middle" font-size="10" font-weight="bold" fill="${color}">
+        ${waitTime}
+      </text>
+    </svg>
+  `;
 
-    return L.divIcon({
-      html: svgIcon,
-      className: 'custom-marker',
-      iconSize: [40, 50],
-      iconAnchor: [20, 50],
-      popupAnchor: [0, -50]
-    });
-  };
+  return L.divIcon({
+    html: svgIcon,
+    className: 'custom-marker',
+    iconSize: [40, 50],
+    iconAnchor: [20, 50],
+    popupAnchor: [0, -50]
+  });
+};
+
 
   const createUserLocationIcon = () => {
     if (!L) return null;

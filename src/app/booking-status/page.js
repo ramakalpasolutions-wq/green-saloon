@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -9,10 +9,16 @@ function BookingStatusContent() {
   const [currentWaitTime, setCurrentWaitTime] = useState(0);
   const [currentQueuePosition, setCurrentQueuePosition] = useState(0);
   const [bookingData, setBookingData] = useState(null);
+  
+  // Use ref to store initial values that shouldn't change
+  const initialDataRef = useRef({
+    loaded: false,
+    waitTime: 0,
+    queueNumber: 0
+  });
 
   const bookingId = searchParams.get('id') || 'GS' + Date.now().toString().slice(-6);
   const salonName = searchParams.get('salon') || 'Green Saloon T Nagar';
-  const initialQueueNumber = parseInt(searchParams.get('queue')) || Math.floor(Math.random() * 20) + 1;
 
   // Load booking from localStorage
   const loadBookingFromStorage = () => {
@@ -23,48 +29,72 @@ function BookingStatusContent() {
         const booking = allBookings.find(b => b.id === bookingId);
         if (booking) {
           setBookingData(booking);
-          return booking.queueNumber;
+          return {
+            queueNumber: booking.queueNumber,
+            waitTime: booking.waitTime
+          };
         }
       }
     }
-    return initialQueueNumber;
+    
+    // Fallback to URL params
+    const urlWaitTime = parseInt(searchParams.get('waitTime'));
+    const urlQueue = parseInt(searchParams.get('queue')) || Math.floor(Math.random() * 20) + 1;
+    
+    return {
+      queueNumber: urlQueue,
+      waitTime: urlWaitTime || (urlQueue * 5)
+    };
   };
 
-  // Calculate logical wait time based on queue position
+  // Calculate wait time based on queue position
   const calculateWaitTime = (queuePosition) => {
     const avgServiceTime = 5;
     return Math.max(0, Math.round((queuePosition - 1) * avgServiceTime));
   };
 
   useEffect(() => {
-    const queueNum = loadBookingFromStorage();
-    setCurrentQueuePosition(queueNum);
-    setCurrentWaitTime(calculateWaitTime(queueNum));
+    // Only load initial data once
+    if (!initialDataRef.current.loaded) {
+      const bookingInfo = loadBookingFromStorage();
+      initialDataRef.current = {
+        loaded: true,
+        waitTime: bookingInfo.waitTime,
+        queueNumber: bookingInfo.queueNumber
+      };
+      
+      setCurrentQueuePosition(bookingInfo.queueNumber);
+      setCurrentWaitTime(bookingInfo.waitTime);
+    }
 
     const handleStorageChange = () => {
-      const newQueueNum = loadBookingFromStorage();
-      setCurrentQueuePosition(newQueueNum);
-      setCurrentWaitTime(calculateWaitTime(newQueueNum));
+      const newBookingInfo = loadBookingFromStorage();
+      if (newBookingInfo.queueNumber !== Math.ceil(currentQueuePosition)) {
+        setCurrentQueuePosition(newBookingInfo.queueNumber);
+        setCurrentWaitTime(newBookingInfo.waitTime);
+      }
     };
 
     window.addEventListener('storage', handleStorageChange);
 
     const storageCheckInterval = setInterval(() => {
-      const newQueueNum = loadBookingFromStorage();
-      if (newQueueNum !== Math.ceil(currentQueuePosition)) {
-        setCurrentQueuePosition(newQueueNum);
-        setCurrentWaitTime(calculateWaitTime(newQueueNum));
+      const newBookingInfo = loadBookingFromStorage();
+      if (newBookingInfo.queueNumber !== Math.ceil(currentQueuePosition)) {
+        setCurrentQueuePosition(newBookingInfo.queueNumber);
+        setCurrentWaitTime(newBookingInfo.waitTime);
       }
     }, 2000);
 
-    const queueMoveInterval = 300;
-    const updateFrequency = 1;
+    // Countdown timer
+    const queueMoveInterval = 300; // 5 minutes = 300 seconds
+    const updateFrequency = 1; // Update every 1 second
 
     const timer = setInterval(() => {
       setCurrentQueuePosition(prev => {
         const decrementAmount = updateFrequency / queueMoveInterval;
         const newPosition = Math.max(1, prev - decrementAmount);
         
+        // Calculate new wait time based on queue movement
         const newWaitTime = calculateWaitTime(Math.ceil(newPosition));
         setCurrentWaitTime(newWaitTime);
         
@@ -82,7 +112,7 @@ function BookingStatusContent() {
       clearInterval(storageCheckInterval);
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [bookingId]);
+  }, [bookingId]); // Only depend on bookingId
 
   const displayQueueNumber = Math.ceil(currentQueuePosition);
 
@@ -182,7 +212,7 @@ function BookingStatusContent() {
             </div>
 
             <div className="mt-4 text-xs text-gray-500">
-              ~5 min per person • Based on queue position
+              ~5 min per person • Based on current queue
             </div>
           </div>
 
@@ -212,11 +242,11 @@ function BookingStatusContent() {
               <div className="relative w-full bg-gray-200 h-3 rounded-full overflow-hidden">
                 <div 
                   className={`absolute left-0 top-0 h-full ${getStatusColor()} transition-all duration-1000`}
-                  style={{ width: `${Math.max(5, Math.min(100, ((initialQueueNumber - currentQueuePosition + 1) / initialQueueNumber) * 100))}%` }}
+                  style={{ width: `${Math.max(5, Math.min(100, ((initialDataRef.current.queueNumber - currentQueuePosition + 1) / initialDataRef.current.queueNumber) * 100))}%` }}
                 ></div>
               </div>
               <div className="flex justify-between mt-2 text-xs text-gray-500">
-                <span>Start: #{initialQueueNumber}</span>
+                <span>Start: #{initialDataRef.current.queueNumber}</span>
                 <span>Current: #{displayQueueNumber}</span>
               </div>
             </div>
@@ -273,6 +303,21 @@ function BookingStatusContent() {
                 </p>
               </div>
             </div>
+
+            {/* Show initial wait time from salon */}
+            {initialDataRef.current.waitTime > 0 && (
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-gray-500">Salon Wait Time When Booked</p>
+                  <p className="font-semibold text-gray-900">{initialDataRef.current.waitTime} minutes</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -314,7 +359,7 @@ function BookingStatusContent() {
                 <li>• SMS notification sent to your number</li>
                 <li>• Please arrive 5 minutes before your turn</li>
                 <li>• Show this page or booking ID at the salon</li>
-                <li>• Queue auto-refreshes if admin resets</li>
+                <li>• Wait time updates in real-time as queue moves</li>
               </ul>
             </div>
           </div>

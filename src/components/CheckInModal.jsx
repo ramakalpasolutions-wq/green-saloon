@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { bookingService } from '@/utils/bookingService';
 import Image from 'next/image';
@@ -7,8 +7,6 @@ import Image from 'next/image';
 export default function CheckInModal({ salon, isOpen, onClose }) {
   const [step, setStep] = useState(1);
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
   const [selectedStaff, setSelectedStaff] = useState(null);
 
@@ -49,35 +47,29 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
   const salonStaff = useMemo(() => {
     if (!salon?.id) return allStaff.slice(0, 4);
     
-    // Use salon ID as seed for consistent staff assignment
     const seed = salon.id;
-    const staffCount = 3 + (seed % 3); // 3-5 staff
+    const staffCount = 3 + (seed % 3);
     const startIndex = (seed * 3) % (allStaff.length - 5);
     
     return allStaff.slice(startIndex, startIndex + staffCount);
   }, [salon?.id]);
 
-  const getNext7Days = () => {
-    const days = [];
-    const today = new Date();
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      days.push({
-        full: date.toISOString().split('T')[0],
-        display: date.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' }),
-        isToday: i === 0
-      });
-    }
-    return days;
-  };
+  // ESC key handler
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        handleClose();
+      }
+    };
 
-  const timeSlots = [
-    "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
-    "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM",
-    "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM", "05:00 PM", "05:30 PM",
-    "06:00 PM", "06:30 PM", "07:00 PM", "07:30 PM", "08:00 PM", "08:30 PM"
-  ];
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isOpen]);
 
   const handlePhoneChange = (e) => {
     const value = e.target.value.replace(/\D/g, '');
@@ -117,16 +109,20 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
       const queueNumber = Math.floor(Math.random() * 20) + 1;
       const bookingId = 'GS' + Date.now().toString().slice(-6);
       
+      const actualWaitTime = parseInt(salon?.waitTime) || 15;
+      
+      console.log('🚀 SALON WAIT TIME:', actualWaitTime, 'Queue:', queueNumber, 'Salon:', salon?.name);
+      
       const bookingData = {
         id: bookingId,
         phone: phoneNumber,
         salonName: salon?.name || 'Green Saloon',
         address: salon?.address || '',
-        date: selectedDate || new Date().toISOString().split('T')[0],
-        time: selectedTime || 'Walk-in',
+        date: new Date().toISOString().split('T')[0],
+        time: 'Walk-in',
         status: 'confirmed',
         queueNumber: queueNumber,
-        waitTime: salon?.waitTime || 15,
+        waitTime: actualWaitTime,
         services: selectedServices.length > 0 
           ? selectedServices.map(id => {
               const service = services.find(s => s.id === id);
@@ -140,7 +136,6 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
         salonId: salon?.id
       };
       
-      // Save booking to localStorage
       bookingService.addBooking(bookingData);
       
       console.log('Booking confirmed and saved:', bookingData);
@@ -150,12 +145,11 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
         icon: '✅',
       });
       
-      // Redirect to status page
       const queryParams = new URLSearchParams({
         id: bookingId,
         salon: salon?.name || 'Green Saloon',
         queue: queueNumber.toString(),
-        wait: (salon?.waitTime || 15).toString()
+        waitTime: actualWaitTime.toString()
       });
       
       window.location.href = `/booking-status?${queryParams.toString()}`;
@@ -168,10 +162,14 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
   const resetForm = () => {
     setStep(1);
     setPhoneNumber('');
-    setSelectedDate('');
-    setSelectedTime('');
     setSelectedServices([]);
     setSelectedStaff(null);
+  };
+
+  const handleClose = () => {
+    onClose();
+    toast('Booking cancelled', { icon: '❌' });
+    resetForm();
   };
 
   const handleNext = () => {
@@ -179,12 +177,8 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
       toast.error('Please enter a valid 10-digit mobile number');
       return;
     }
-    if (step === 2 && (!selectedDate || !selectedTime)) {
-      toast.error('Please select both date and time');
-      return;
-    }
     
-    if (step < 5) {
+    if (step < 4) {
       setStep(step + 1);
       if (step === 1) {
         toast.success('Phone number verified!', { icon: '📱' });
@@ -196,10 +190,8 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
 
   const handleSkip = () => {
     if (step === 2) {
-      toast('Skipped appointment time - Walk-in mode', { icon: 'ℹ️' });
-    } else if (step === 3) {
       toast('Skipped service selection', { icon: 'ℹ️' });
-    } else if (step === 4) {
+    } else if (step === 3) {
       toast('No staff preference - Any available stylist', { icon: 'ℹ️' });
     }
     setStep(step + 1);
@@ -208,10 +200,9 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
   const getStepTitle = () => {
     switch(step) {
       case 1: return 'Enter Mobile Number';
-      case 2: return 'Select Date & Time';
-      case 3: return 'Choose Services';
-      case 4: return 'Select Staff';
-      case 5: return 'Confirm Booking';
+      case 2: return 'Choose Services';
+      case 3: return 'Select Staff';
+      case 4: return 'Confirm Booking';
       default: return '';
     }
   };
@@ -226,15 +217,11 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{salon?.name}</h2>
             <p className="text-sm text-gray-600 mt-1">
-              Step {step} of 5: {getStepTitle()}
+              Step {step} of 4: {getStepTitle()}
             </p>
           </div>
           <button 
-            onClick={() => {
-              onClose();
-              toast('Booking cancelled', { icon: '❌' });
-              resetForm();
-            }}
+            onClick={handleClose}
             className="text-gray-400 hover:text-gray-600 p-2"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -246,7 +233,7 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
         {/* Progress Bar */}
         <div className="px-4 sm:px-6 pt-4">
           <div className="flex gap-2">
-            {[1, 2, 3, 4, 5].map((s) => (
+            {[1, 2, 3, 4].map((s) => (
               <div 
                 key={s}
                 className={`h-1 flex-1 rounded-full transition-all ${
@@ -332,62 +319,8 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
             </div>
           )}
 
-          {/* Step 2: Date & Time */}
+          {/* Step 2: Services */}
           {step === 2 && (
-            <div className="space-y-6">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                <p className="text-sm text-blue-800">
-                  <strong>💡 Tip:</strong> Skip this step if you want to walk-in directly without appointment
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Select Date</h3>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-3">
-                  {getNext7Days().map((day) => (
-                    <button
-                      key={day.full}
-                      onClick={() => setSelectedDate(day.full)}
-                      className={`p-3 rounded-lg border-2 text-center transition ${
-                        selectedDate === day.full
-                          ? 'border-emerald-600 bg-emerald-50'
-                          : 'border-gray-200 hover:border-emerald-300'
-                      }`}
-                    >
-                      <div className="text-xs text-gray-600 mb-1">
-                        {day.isToday ? 'Today' : day.display.split(',')[0]}
-                      </div>
-                      <div className="font-bold text-gray-900">
-                        {day.display.split(' ')[1]}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Select Time</h3>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 sm:gap-3">
-                  {timeSlots.map((time) => (
-                    <button
-                      key={time}
-                      onClick={() => setSelectedTime(time)}
-                      className={`p-3 rounded-lg border-2 text-sm font-medium transition ${
-                        selectedTime === time
-                          ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
-                          : 'border-gray-200 text-gray-700 hover:border-emerald-300'
-                      }`}
-                    >
-                      {time}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Services */}
-          {step === 3 && (
             <div>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <p className="text-sm text-blue-800">
@@ -442,8 +375,8 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
             </div>
           )}
 
-          {/* Step 4: Staff */}
-          {step === 4 && (
+          {/* Step 3: Staff */}
+          {step === 3 && (
             <div>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <p className="text-sm text-blue-800">
@@ -501,8 +434,8 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
             </div>
           )}
 
-          {/* Step 5: Confirmation */}
-          {step === 5 && (
+          {/* Step 4: Confirmation */}
+          {step === 4 && (
             <div className="space-y-6">
               <div className="text-center mb-6">
                 <div className="inline-block p-4 bg-emerald-100 rounded-full mb-4">
@@ -511,25 +444,13 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
                   </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Confirm Your Booking</h3>
-                <p className="text-gray-600">Please review your appointment details</p>
+                <p className="text-gray-600">Please review your walk-in details</p>
               </div>
 
               <div className="space-y-4">
                 <div className="bg-gray-50 rounded-xl p-4">
                   <h4 className="font-semibold text-gray-900 mb-2">📱 Contact Number</h4>
                   <p className="text-gray-600 font-medium">+91 {phoneNumber}</p>
-                </div>
-
-                <div className="bg-gray-50 rounded-xl p-4">
-                  <h4 className="font-semibold text-gray-900 mb-2">📅 Date & Time</h4>
-                  {selectedDate && selectedTime ? (
-                    <>
-                      <p className="text-gray-600">{new Date(selectedDate).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                      <p className="text-gray-600 font-medium">{selectedTime}</p>
-                    </>
-                  ) : (
-                    <p className="text-gray-600 italic">Walk-in (No appointment)</p>
-                  )}
                 </div>
 
                 <div className="bg-gray-50 rounded-xl p-4">
@@ -592,8 +513,8 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
               </button>
             )}
             
-            {/* Skip button - only show on steps 2, 3, 4 */}
-            {step >= 2 && step <= 4 && (
+            {/* Skip button - only show on steps 2 and 3 */}
+            {step >= 2 && step <= 3 && (
               <button
                 onClick={handleSkip}
                 className="px-6 py-3 border-2 border-orange-300 text-orange-600 rounded-lg hover:bg-orange-50 transition font-semibold"
@@ -611,9 +532,14 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
                   : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg'
               }`}
             >
-              {step === 5 ? 'Confirm Booking' : 'Continue'}
+              {step === 4 ? 'Confirm Booking' : 'Continue'}
             </button>
           </div>
+          
+          {/* ESC hint */}
+          <p className="text-center text-xs text-gray-500 mt-3">
+            Press <kbd className="px-2 py-1 bg-gray-100 border border-gray-300 rounded text-gray-700 font-mono">ESC</kbd> to close
+          </p>
         </div>
       </div>
     </div>

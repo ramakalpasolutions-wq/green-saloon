@@ -39,9 +39,6 @@ const createCustomIcon = (waitTime) => {
   });
 };
 
-// User location icon
-// User location icon - Google Maps style pointer
-// User location icon - Single Google Maps style pointer
 // User location icon - Simple blue dot like Google Maps
 const createUserLocationIcon = () => {
   return L.divIcon({
@@ -57,9 +54,6 @@ const createUserLocationIcon = () => {
     popupAnchor: [0, -12]
   });
 };
-
-
-
 
 function MapController({ center, zoom }) {
   const map = useMap();
@@ -115,20 +109,23 @@ export default function MapComponent({ salons, mapCenter, mapZoom, selectedSalon
       
       <MapController center={mapCenter} zoom={mapZoom} />
 
-      {/* User Location Marker with Circle */}
+      {/* User Location - Circle + Blue Dot */}
       {userLocation && (
         <>
+          {/* Accuracy Circle */}
           <Circle
             center={userLocation}
             radius={100}
             pathOptions={{
-              color: '#3B82F6',
-              fillColor: '#3B82F6',
+              color: '#4285F4',
+              fillColor: '#4285F4',
               fillOpacity: 0.1,
-              weight: 2,
-              opacity: 0.5
+              weight: 1,
+              opacity: 0.3
             }}
           />
+          
+          {/* Blue Dot Marker */}
           <Marker
             position={userLocation}
             icon={createUserLocationIcon()}

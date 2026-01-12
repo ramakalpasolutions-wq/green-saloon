@@ -185,60 +185,70 @@ export default function FindSalonPage() {
                     selectedSalon?.id === salon.id ? 'border-emerald-500 ring-2 ring-emerald-200' : 'border-gray-200'
                   }`}
                 >
-                  <div className="flex gap-3 p-3">
-                    {/* Salon Image */}
-                    <div className="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
-                      <img
-                        src={`https://via.placeholder.com/80x80/10B981/FFFFFF?text=${salon.name.charAt(0)}`}
-                        alt={salon.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    {/* Salon Info */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-gray-900 text-base truncate mb-1">
+                  <div className="p-4">
+                    {/* Header with Name and Favorite */}
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-semibold text-gray-900 text-base pr-2">
                         {salon.name}
                       </h3>
-                      <div className="flex items-center gap-1 text-xs text-gray-500 mb-2">
-                        {salon.category && salon.category[0] && (
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        className="flex-shrink-0 text-gray-400 hover:text-red-500 transition"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* Address */}
+                    <p className="text-sm text-gray-600 mb-3">{salon.address}</p>
+
+                    {/* Categories */}
+                    {salon.category && salon.category.length > 0 && (
+                      <div className="flex items-center gap-1 text-xs text-gray-500 mb-3">
+                        <span>{salon.category[0]}</span>
+                        {salon.category[1] && (
                           <>
-                            <span>{salon.category[0]}</span>
-                            {salon.category[1] && (
-                              <>
-                                <span>•</span>
-                                <span>{salon.category[1]}</span>
-                              </>
-                            )}
+                            <span>•</span>
+                            <span>{salon.category[1]}</span>
                           </>
                         )}
                       </div>
+                    )}
+                    
+                    {/* Info Row - Status, Wait Time, Distance */}
+                    <div className="flex items-center gap-3 mb-3 flex-wrap">
+                      <span className={`text-xs font-semibold ${
+                        salon.status === 'Open now' ? 'text-green-600' : 'text-orange-600'
+                      }`}>
+                        {salon.status}
+                      </span>
                       
-                      {/* Wait Time Badge */}
-                      <div className="flex items-center gap-2">
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
-                          parseInt(salon.waitTime) <= 15 
-                            ? 'bg-green-100 text-green-700' 
-                            : parseInt(salon.waitTime) <= 30
-                            ? 'bg-orange-100 text-orange-700'
-                            : 'bg-red-100 text-red-700'
-                        }`}>
-                          {salon.waitTime} Min Wait
-                        </span>
-                        <span className="text-gray-500 text-xs">₹ 300</span>
-                      </div>
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                        parseInt(salon.waitTime) <= 15 
+                          ? 'bg-green-100 text-green-700' 
+                          : parseInt(salon.waitTime) <= 30
+                          ? 'bg-orange-100 text-orange-700'
+                          : 'bg-red-100 text-red-700'
+                      }`}>
+                        {salon.waitTime} Min Wait
+                      </span>
+
+                      <span className="text-gray-500 text-xs">{salon.distance}</span>
                     </div>
 
-                    {/* Favorite Icon */}
-                    <button 
+                    {/* Check In Button */}
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
+                        handleCheckIn(salon);
                       }}
-                      className="flex-shrink-0 text-gray-400 hover:text-red-500 transition"
+                      className="w-full bg-emerald-600 text-white py-2.5 rounded-lg hover:bg-emerald-700 transition font-semibold text-sm"
                     >
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                      </svg>
+                      Check In
                     </button>
                   </div>
                 </div>
@@ -254,16 +264,16 @@ export default function FindSalonPage() {
       {/* Desktop Layout */}
       <div className="hidden lg:flex h-screen">
         {/* Left Sidebar */}
-        <div className="w-2/5 xl:w-1/3 bg-white text-black overflow-y-auto border-r border-gray-200">
+        <div className="w-2/5 xl:w-1/3 bg-white overflow-y-auto border-r border-gray-200">
           {/* Search Bar */}
-          <div className="p-4 sm:p-6 border-b border-gray-200  sticky top-0 bg-white z-10">
+          <div className="p-4 sm:p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
             <div className="relative">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by name, location, or phone..."
-                className="w-full px-4 py-3 pr-24 border-2 border-emerald-500  rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-base"
+                className="w-full px-4 py-3 pr-24 border-2 border-emerald-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-base"
               />
               {searchQuery && (
                 <button

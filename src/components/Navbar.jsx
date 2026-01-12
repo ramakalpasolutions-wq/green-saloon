@@ -17,18 +17,28 @@ export default function Navbar() {
           </div>
 
           {/* Desktop: Check In + Find a Salon Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link href="/check-in">
-              <button className="border-2 border-emerald-600 text-emerald-600 px-5 lg:px-6 py-2.5 lg:py-3 rounded-lg hover:bg-emerald-50 transition font-semibold text-sm lg:text-base">
-                Check In
-              </button>
-            </Link>
-            <Link href="/find-salon">
-              <button className="bg-emerald-600 text-white px-5 lg:px-6 py-2.5 lg:py-3 rounded-lg hover:bg-emerald-700 transition font-semibold text-sm lg:text-base shadow-md">
-                Find a Salon
-              </button>
-            </Link>
-          </div>
+         {/* Desktop: Check In + Find a Salon + Contact Buttons */}
+<div className="hidden md:flex items-center space-x-4">
+  <Link href="/check-in">
+    <button className="border-2 border-emerald-600 text-emerald-600 px-5 lg:px-6 py-2.5 lg:py-3 rounded-lg hover:bg-emerald-50 transition font-semibold text-sm lg:text-base">
+      Check In
+    </button>
+  </Link>
+
+  <Link href="/find-salon">
+    <button className="bg-emerald-600 text-white px-5 lg:px-6 py-2.5 lg:py-3 rounded-lg hover:bg-emerald-700 transition font-semibold text-sm lg:text-base shadow-md">
+      Find a Salon
+    </button>
+  </Link>
+
+  {/* New Contact button */}
+  <Link href="/contact">
+    <button className="border-2 border-emerald-600 text-emerald-600 px-5 lg:px-6 py-2.5 lg:py-3 rounded-lg hover:bg-emerald-50 transition font-semibold text-sm lg:text-base">
+      Contact Us
+    </button>
+  </Link>
+</div>
+
 
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -50,26 +60,39 @@ export default function Navbar() {
 
         {/* Mobile menu */}
         {isOpen && (
-          <div className="md:hidden pb-4">
-            <div className="flex flex-col space-y-3">
-              <Link href="/check-in">
-                <button 
-                  className="border-2 border-emerald-600 text-emerald-600 px-6 py-3 rounded-lg hover:bg-emerald-50 transition font-semibold text-base w-full"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Check In
-                </button>
-              </Link>
-              <Link href="/find-salon">
-                <button 
-                  className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition font-semibold text-base shadow-lg w-full"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Find a Salon
-                </button>
-              </Link>
-            </div>
-          </div>
+  <div className="md:hidden pb-4">
+    <div className="flex flex-col space-y-3">
+      <Link href="/check-in">
+        <button
+          className="border-2 border-emerald-600 text-emerald-600 px-6 py-3 rounded-lg hover:bg-emerald-50 transition font-semibold text-base w-full"
+          onClick={() => setIsOpen(false)}
+        >
+          Check In
+        </button>
+      </Link>
+
+      <Link href="/find-salon">
+        <button
+          className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition font-semibold text-base shadow-lg w-full"
+          onClick={() => setIsOpen(false)}
+        >
+          Find a Salon
+        </button>
+      </Link>
+
+      {/* New Contact button */}
+      <Link href="/contact">
+        <button
+          className="border-2 border-emerald-600 text-emerald-600 px-6 py-3 rounded-lg hover:bg-emerald-50 transition font-semibold text-base w-full"
+          onClick={() => setIsOpen(false)}
+        >
+          Contact Us
+        </button>
+      </Link>
+    </div>
+  </div>
+
+
         )}
       </div>
     </nav>

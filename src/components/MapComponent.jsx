@@ -1,9 +1,9 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix for default marker icons in Next.js
 if (typeof window !== 'undefined') {
   delete L.Icon.Default.prototype._getIconUrl;
   L.Icon.Default.mergeOptions({
@@ -13,12 +13,11 @@ if (typeof window !== 'undefined') {
   });
 }
 
-// Custom marker icons based on wait time
 const createCustomIcon = (waitTime) => {
   const time = parseInt(waitTime);
-  let color = '#10B981'; // green
-  if (time > 30) color = '#EF4444'; // red
-  else if (time > 15) color = '#F59E0B'; // orange
+  let color = '#10B981';
+  if (time > 30) color = '#EF4444';
+  else if (time > 15) color = '#F59E0B';
 
   const svgIcon = `
     <svg width="40" height="50" viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg">
@@ -40,18 +39,44 @@ const createCustomIcon = (waitTime) => {
   });
 };
 
-// Component to handle map updates
 function MapController({ center, zoom }) {
   const map = useMap();
   
-  if (center) {
-    map.setView(center, zoom || 13);
-  }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, [map]);
+  
+  useEffect(() => {
+    if (center) {
+      map.setView(center, zoom || 13);
+    }
+  }, [center, zoom, map]);
   
   return null;
 }
 
 export default function MapComponent({ salons, mapCenter, mapZoom, selectedSalon, setSelectedSalon, onCheckIn }) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="flex items-center justify-center h-full bg-gray-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading map...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <MapContainer
       center={mapCenter}
@@ -67,7 +92,6 @@ export default function MapComponent({ salons, mapCenter, mapZoom, selectedSalon
       
       <MapController center={mapCenter} zoom={mapZoom} />
 
-      {/* Markers for each salon */}
       {salons.map((salon) => (
         <Marker
           key={salon.id}

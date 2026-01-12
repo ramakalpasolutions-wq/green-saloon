@@ -2,8 +2,8 @@
 import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import CheckInModal from '@/components/CheckInModal';
+import { allSalons } from '@/utils/salonsData';
 
-// Dynamically import the map component with no SSR
 const MapComponent = dynamic(() => import('@/components/MapComponent'), {
   ssr: false,
   loading: () => (
@@ -24,193 +24,12 @@ export default function FindSalonPage() {
     openNow: false
   });
   const [selectedSalon, setSelectedSalon] = useState(null);
-  const [mapCenter, setMapCenter] = useState([13.0827, 80.2707]); // Chennai
+  const [mapCenter, setMapCenter] = useState([13.0827, 80.2707]);
   const [mapZoom, setMapZoom] = useState(12);
   const [checkInModalOpen, setCheckInModalOpen] = useState(false);
   const [checkInSalon, setCheckInSalon] = useState(null);
 
-  const salons = useMemo(() => [
-    {
-      id: 1,
-      name: 'B B Traders',
-      owner: 'Bhag Chand Jain',
-      phone: '+91 9460637437',
-      address: 'Kishangarh Harmada Road Madanganj, Ajmer, Rajasthan 305801',
-      status: 'Open now',
-      time: 'Opens 9 AM',
-      distance: '1.2 mi',
-      waitTime: '15',
-      coordinates: [26.1445, 75.6132],
-      category: ['Beauty & Hair Products', 'Face Products']
-    },
-    {
-      id: 2,
-      name: 'Green Saloon T Nagar',
-      owner: 'Ramesh Kumar',
-      phone: '+91 9876543210',
-      address: '123 Usman Road, T Nagar, Chennai, Tamil Nadu 600017',
-      status: 'Open now',
-      time: 'Opens 9 AM',
-      distance: '0.8 mi',
-      waitTime: '10',
-      coordinates: [13.0418, 80.2341],
-      category: ['Premium Haircuts', 'Beard Styling', 'Hair Color']
-    },
-    {
-      id: 3,
-      name: 'Chennai Style Studio',
-      owner: 'Vijay Prakash',
-      phone: '+91 9876543211',
-      address: '45 Anna Salai, Mount Road, Chennai, Tamil Nadu 600002',
-      status: 'Open now',
-      time: 'Opens 8:30 AM',
-      distance: '1.5 mi',
-      waitTime: '20',
-      coordinates: [13.0569, 80.2506],
-      category: ['Classic Cuts', 'Spa Services', 'Facial']
-    },
-    {
-      id: 4,
-      name: 'Adyar Premium Grooming',
-      owner: 'Suresh Babu',
-      phone: '+91 9876543212',
-      address: '78 TTK Road, Alwarpet, Chennai, Tamil Nadu 600018',
-      status: 'Open now',
-      time: 'Opens 9 AM',
-      distance: '2.1 mi',
-      waitTime: '25',
-      coordinates: [13.0339, 80.2547],
-      category: ['Premium Cuts', 'Beard Design', 'Hair Spa']
-    },
-    {
-      id: 5,
-      name: 'Velachery Green Cuts',
-      owner: 'Karthik Raj',
-      phone: '+91 9876543213',
-      address: '234 Velachery Main Road, Chennai, Tamil Nadu 600042',
-      status: 'Open now',
-      time: 'Opens 9 AM',
-      distance: '3.5 mi',
-      waitTime: '15',
-      coordinates: [12.975, 80.2167],
-      category: ['Haircuts', 'Shaving', 'Kids Cuts']
-    },
-    {
-      id: 6,
-      name: 'Besant Nagar Beach Salon',
-      owner: 'Arun Kumar',
-      phone: '+91 9876543214',
-      address: '67 Besant Avenue Road, Besant Nagar, Chennai, Tamil Nadu 600090',
-      status: 'Open now',
-      time: 'Opens 10 AM',
-      distance: '2.8 mi',
-      waitTime: '30',
-      coordinates: [12.9986, 80.2671],
-      category: ['Beach Cuts', 'Styling', 'Hair Treatment']
-    },
-    {
-      id: 7,
-      name: 'Porur Express Salon',
-      owner: 'Murali Krishna',
-      phone: '+91 9876543215',
-      address: '456 Mount Poonamallee Road, Porur, Chennai, Tamil Nadu 600116',
-      status: 'Open now',
-      time: 'Opens 9 AM',
-      distance: '4.2 mi',
-      waitTime: '35',
-      coordinates: [13.0358, 80.1578],
-      category: ['Quick Cuts', 'Beard Trim', 'Hair Color']
-    },
-    {
-      id: 8,
-      name: 'OMR Tech Park Grooming',
-      owner: 'Senthil Kumar',
-      phone: '+91 9876543216',
-      address: '89 Old Mahabalipuram Road, Sholinganallur, Chennai, Tamil Nadu 600119',
-      status: 'Open now',
-      time: 'Opens 8 AM',
-      distance: '5.0 mi',
-      waitTime: '18',
-      coordinates: [12.9008, 80.2208],
-      category: ['Professional Cuts', 'Corporate Styling', 'Quick Service']
-    },
-    {
-      id: 9,
-      name: 'Mylapore Traditional Salon',
-      owner: 'Rajendran',
-      phone: '+91 9876543217',
-      address: '23 Luz Church Road, Mylapore, Chennai, Tamil Nadu 600004',
-      status: 'Open now',
-      time: 'Opens 9 AM',
-      distance: '1.9 mi',
-      waitTime: '22',
-      coordinates: [13.0339, 80.2619],
-      category: ['Traditional Cuts', 'Head Massage', 'Shaving']
-    },
-    {
-      id: 10,
-      name: 'Nungambakkam Elite Salon',
-      owner: 'Prakash Reddy',
-      phone: '+91 9876543218',
-      address: '12 Khader Nawaz Khan Road, Nungambakkam, Chennai, Tamil Nadu 600006',
-      status: 'Opens soon',
-      time: 'Opens 10 AM',
-      distance: '1.3 mi',
-      waitTime: '28',
-      coordinates: [13.0569, 80.2425],
-      category: ['Elite Styling', 'Premium Services', 'VIP Lounge']
-    },
-    {
-      id: 11,
-      name: 'Banjara Hills Salon',
-      address: 'Road No. 12, Banjara Hills, Hyderabad, Telangana 500034',
-      status: 'Open now',
-      time: 'Opens 9 AM',
-      distance: '2.5 mi',
-      waitTime: '35',
-      coordinates: [17.4239, 78.4438]
-    },
-    {
-      id: 12,
-      name: 'Jubilee Hills Premium',
-      address: 'Road No. 36, Jubilee Hills, Hyderabad, Telangana 500033',
-      status: 'Opens soon',
-      time: 'Opens 10 AM',
-      distance: '3.2 mi',
-      waitTime: '25',
-      coordinates: [17.4326, 78.4071]
-    },
-    {
-      id: 13,
-      name: 'Madhapur Green Saloon',
-      address: 'HITEC City, Madhapur, Hyderabad, Telangana 500081',
-      status: 'Open now',
-      time: 'Opens 8 AM',
-      distance: '4.1 mi',
-      waitTime: '15',
-      coordinates: [17.4485, 78.3908]
-    },
-    {
-      id: 14,
-      name: 'Gachibowli Branch',
-      address: 'DLF Cyber City, Gachibowli, Hyderabad, Telangana 500032',
-      status: 'Open now',
-      time: 'Opens 9 AM',
-      distance: '5.0 mi',
-      waitTime: '45',
-      coordinates: [17.4403, 78.3489]
-    },
-    {
-      id: 15,
-      name: 'Kukatpally Salon',
-      address: 'KPHB Colony, Kukatpally, Hyderabad, Telangana 500072',
-      status: 'Open now',
-      time: 'Opens 9 AM',
-      distance: '1.8 mi',
-      waitTime: '5',
-      coordinates: [17.495, 78.3975]
-    }
-  ], []);
+  const salons = useMemo(() => allSalons, []);
 
   const toggleFilter = (filter) => {
     setSelectedFilters(prev => ({
@@ -228,6 +47,13 @@ export default function FindSalonPage() {
   const handleCheckIn = (salon) => {
     setCheckInSalon(salon);
     setCheckInModalOpen(true);
+  };
+
+  const scrollToMap = () => {
+    const mapSection = document.querySelector('#mobile-map');
+    if (mapSection) {
+      mapSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
@@ -275,7 +101,6 @@ export default function FindSalonPage() {
                 />
                 <span className="text-sm text-gray-700">Favorite</span>
               </label>
-
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -285,7 +110,6 @@ export default function FindSalonPage() {
                 />
                 <span className="text-sm text-gray-700">Recently visited</span>
               </label>
-
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -354,17 +178,30 @@ export default function FindSalonPage() {
         </div>
 
         {/* Mobile Map (below list, fixed height) */}
-        <div className="lg:hidden w-full h-64 border-t border-gray-200">
-          <MapComponent
-            salons={salons}
-            mapCenter={mapCenter}
-            mapZoom={mapZoom}
-            selectedSalon={selectedSalon}
-            setSelectedSalon={setSelectedSalon}
-            onCheckIn={handleCheckIn}
-          />
+        <div id="mobile-map" className="lg:hidden w-full h-[50vh] sm:h-[60vh] relative border-t border-gray-200">
+          <div className="absolute inset-0 w-full h-full">
+            <MapComponent
+              salons={salons}
+              mapCenter={mapCenter}
+              mapZoom={mapZoom}
+              selectedSalon={selectedSalon}
+              setSelectedSalon={setSelectedSalon}
+              onCheckIn={handleCheckIn}
+            />
+          </div>
         </div>
       </div>
+
+      {/* Floating Map Button (Mobile Only) */}
+      <button 
+        onClick={scrollToMap}
+        className="lg:hidden fixed bottom-6 right-6 bg-emerald-600 text-white px-5 py-3 rounded-lg shadow-2xl hover:bg-emerald-700 transition font-semibold flex items-center gap-2 z-50"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+        </svg>
+        Map
+      </button>
 
       {/* Check-In Modal */}
       <CheckInModal

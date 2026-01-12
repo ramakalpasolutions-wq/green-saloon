@@ -17,7 +17,7 @@ const MapComponent = dynamic(() => import('@/components/MapComponent'), {
 });
 
 export default function FindSalonPage() {
-  const [searchQuery, setSearchQuery] = useState('Chennai');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilters, setSelectedFilters] = useState({
     favorite: false,
     recentlyVisited: false,
@@ -29,7 +29,27 @@ export default function FindSalonPage() {
   const [checkInModalOpen, setCheckInModalOpen] = useState(false);
   const [checkInSalon, setCheckInSalon] = useState(null);
 
-  const salons = useMemo(() => allSalons, []);
+  // Filter salons based on search query
+  const filteredSalons = useMemo(() => {
+    let filtered = allSalons;
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(salon => 
+        salon.name.toLowerCase().includes(query) ||
+        salon.address.toLowerCase().includes(query) ||
+        (salon.phone && salon.phone.includes(query))
+      );
+    }
+
+    // Open now filter
+    if (selectedFilters.openNow) {
+      filtered = filtered.filter(salon => salon.status === 'Open now');
+    }
+
+    return filtered;
+  }, [searchQuery, selectedFilters]);
 
   const toggleFilter = (filter) => {
     setSelectedFilters(prev => ({
@@ -56,6 +76,15 @@ export default function FindSalonPage() {
     }
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    // Search is already filtered in useMemo
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
+
   return (
     <>
       <div className="flex flex-col lg:flex-row h-screen">
@@ -63,20 +92,43 @@ export default function FindSalonPage() {
         <div className="w-full lg:w-2/5 xl:w-1/3 bg-white overflow-y-auto border-r border-gray-200">
           {/* Search Bar */}
           <div className="p-4 sm:p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search location..."
-                className="w-full px-4 py-3 pr-12 border-2 border-emerald-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-base"
-              />
-              <button className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-            </div>
+            <form onSubmit={handleSearch}>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by name, location, or phone..."
+                  className="w-full px-4 py-3 pr-24 border-2 border-emerald-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-base"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={clearSearch}
+                    className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+                <button 
+                  type="submit"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-emerald-700"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+              </div>
+            </form>
+
+            {/* Search Results Count */}
+            {searchQuery && (
+              <div className="mt-2 text-sm text-gray-600">
+                Found {filteredSalons.length} salon{filteredSalons.length !== 1 ? 's' : ''}
+              </div>
+            )}
           </div>
 
           {/* Sort and Filters */}
@@ -124,51 +176,61 @@ export default function FindSalonPage() {
 
           {/* Salon List */}
           <div className="divide-y divide-gray-200">
-            {salons.map((salon) => (
-              <div
-                key={salon.id}
-                className={`p-4 sm:p-6 hover:bg-gray-50 transition cursor-pointer ${
-                  selectedSalon?.id === salon.id ? 'bg-emerald-50 border-l-4 border-emerald-600' : ''
-                }`}
-                onClick={() => handleSalonClick(salon)}
-              >
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">{salon.name}</h3>
-                  <button className="text-gray-400 hover:text-emerald-600">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
+            {filteredSalons.length === 0 ? (
+              <div className="p-8 text-center">
+                <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No salons found</h3>
+                <p className="text-gray-600">Try adjusting your search or filters</p>
+              </div>
+            ) : (
+              filteredSalons.map((salon) => (
+                <div
+                  key={salon.id}
+                  className={`p-4 sm:p-6 hover:bg-gray-50 transition cursor-pointer ${
+                    selectedSalon?.id === salon.id ? 'bg-emerald-50 border-l-4 border-emerald-600' : ''
+                  }`}
+                  onClick={() => handleSalonClick(salon)}
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-lg font-bold text-gray-900">{salon.name}</h3>
+                    <button className="text-gray-400 hover:text-emerald-600">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <p className="text-sm text-gray-600 mb-3">{salon.address}</p>
+
+                  <div className="flex items-center gap-4 text-sm mb-4">
+                    <span className={`font-semibold ${salon.status === 'Open now' ? 'text-green-600' : 'text-orange-600'}`}>
+                      {salon.status}
+                    </span>
+                    <span className="text-gray-600">• {salon.time}</span>
+                    <span className="text-gray-600">• {salon.distance}</span>
+                  </div>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCheckIn(salon);
+                    }}
+                    className="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition font-semibold"
+                  >
+                    Check In
                   </button>
                 </div>
-
-                <p className="text-sm text-gray-600 mb-3">{salon.address}</p>
-
-                <div className="flex items-center gap-4 text-sm mb-4">
-                  <span className={`font-semibold ${salon.status === 'Open now' ? 'text-green-600' : 'text-orange-600'}`}>
-                    {salon.status}
-                  </span>
-                  <span className="text-gray-600">• {salon.time}</span>
-                  <span className="text-gray-600">• {salon.distance}</span>
-                </div>
-
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleCheckIn(salon);
-                  }}
-                  className="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition font-semibold"
-                >
-                  Check In
-                </button>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
 
         {/* Desktop Map (right side, full height) */}
         <div className="hidden lg:block flex-1 relative h-screen">
           <MapComponent
-            salons={salons}
+            salons={filteredSalons}
             mapCenter={mapCenter}
             mapZoom={mapZoom}
             selectedSalon={selectedSalon}
@@ -181,7 +243,7 @@ export default function FindSalonPage() {
         <div id="mobile-map" className="lg:hidden w-full h-[50vh] sm:h-[60vh] relative border-t border-gray-200">
           <div className="absolute inset-0 w-full h-full">
             <MapComponent
-              salons={salons}
+              salons={filteredSalons}
               mapCenter={mapCenter}
               mapZoom={mapZoom}
               selectedSalon={selectedSalon}

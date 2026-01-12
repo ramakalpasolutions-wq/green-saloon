@@ -1,9 +1,9 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-export default function BookingStatusPage() {
+function BookingStatusContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [currentWaitTime, setCurrentWaitTime] = useState(0);
@@ -31,19 +31,16 @@ export default function BookingStatusPage() {
   };
 
   // Calculate logical wait time based on queue position
-  // Average service time per person: 5 minutes
   const calculateWaitTime = (queuePosition) => {
     const avgServiceTime = 5;
     return Math.max(0, Math.round((queuePosition - 1) * avgServiceTime));
   };
 
   useEffect(() => {
-    // Initial load
     const queueNum = loadBookingFromStorage();
     setCurrentQueuePosition(queueNum);
     setCurrentWaitTime(calculateWaitTime(queueNum));
 
-    // Listen for localStorage changes (when admin resets)
     const handleStorageChange = () => {
       const newQueueNum = loadBookingFromStorage();
       setCurrentQueuePosition(newQueueNum);
@@ -52,7 +49,6 @@ export default function BookingStatusPage() {
 
     window.addEventListener('storage', handleStorageChange);
 
-    // Also check every 2 seconds for changes (same tab)
     const storageCheckInterval = setInterval(() => {
       const newQueueNum = loadBookingFromStorage();
       if (newQueueNum !== Math.ceil(currentQueuePosition)) {
@@ -61,16 +57,14 @@ export default function BookingStatusPage() {
       }
     }, 2000);
 
-    // Update every second - simulate queue movement
-    const queueMoveInterval = 300; // seconds per person (5 minutes)
-    const updateFrequency = 1; // update every 1 second
+    const queueMoveInterval = 300;
+    const updateFrequency = 1;
 
     const timer = setInterval(() => {
       setCurrentQueuePosition(prev => {
         const decrementAmount = updateFrequency / queueMoveInterval;
         const newPosition = Math.max(1, prev - decrementAmount);
         
-        // Update wait time based on new position
         const newWaitTime = calculateWaitTime(Math.ceil(newPosition));
         setCurrentWaitTime(newWaitTime);
         
@@ -150,11 +144,10 @@ export default function BookingStatusPage() {
             <p className="font-semibold text-lg">{getStatusText()}</p>
           </div>
 
-          {/* Wait Time Circle - Large Display */}
+          {/* Wait Time Circle */}
           <div className="py-12 text-center border-b border-gray-200">
             <p className="text-gray-600 text-sm uppercase tracking-wide mb-4">Estimated Wait Time</p>
             
-            {/* Circular Wait Time */}
             <div className="flex justify-center mb-4">
               <div className={`relative inline-flex items-center justify-center w-48 h-48 rounded-full ${waitTimeColors.bg} ring-8 ${waitTimeColors.ring} shadow-lg transition-all duration-500`}>
                 <div className="text-center">
@@ -188,7 +181,6 @@ export default function BookingStatusPage() {
               <span className="text-sm font-medium">Auto-updating in real-time</span>
             </div>
 
-            {/* Wait Time Info */}
             <div className="mt-4 text-xs text-gray-500">
               ~5 min per person • Based on queue position
             </div>
@@ -268,7 +260,6 @@ export default function BookingStatusPage() {
               </div>
             </div>
 
-            {/* Expected Time */}
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -330,5 +321,21 @@ export default function BookingStatusPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Main component with Suspense wrapper
+export default function BookingStatusPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-emerald-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">Loading booking status...</p>
+        </div>
+      </div>
+    }>
+      <BookingStatusContent />
+    </Suspense>
   );
 }

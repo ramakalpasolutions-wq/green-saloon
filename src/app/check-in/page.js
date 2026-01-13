@@ -102,7 +102,7 @@ export default function CheckInPage() {
               </label>
               <div className="flex gap-3">
                 <div className="relative flex-1">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
+                  <span className="absolute left-4 text-black top-1/2 -translate-y-1/2 text-gray-500 font-medium">
                     +91
                   </span>
                   <input
@@ -111,7 +111,7 @@ export default function CheckInPage() {
                     value={phoneNumber}
                     onChange={handlePhoneChange}
                     placeholder="Enter 10-digit mobile number"
-                    className={`w-full pl-16 pr-4 py-4 border-2 rounded-lg focus:outline-none focus:ring-2 text-base sm:text-lg ${
+                    className={`w-full pl-16 pr-4 py-4 border-2 text-black rounded-lg focus:outline-none focus:ring-2 text-base sm:text-lg ${
                       error 
                         ? 'border-red-500 focus:border-red-500 focus:ring-red-200' 
                         : 'border-gray-300 focus:border-emerald-500 focus:ring-emerald-200'

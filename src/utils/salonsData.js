@@ -9,7 +9,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.5 mi',
-    waitTime: '15',
+    waitTime:15,
     coordinates: [17.3940, 78.5174],
     category: ['Hair Spa', 'Beauty']
   },
@@ -21,7 +21,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.1 mi',
-    waitTime: '20',
+    waitTime:20,
     coordinates: [17.4054, 78.4608],
     category: ['Unisex Salon']
   },
@@ -33,7 +33,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.8 mi',
-    waitTime: '18',
+    waitTime:18,
     coordinates: [17.4239, 78.4569],
     category: ['Hair Saloon', 'Spa']
   },
@@ -45,7 +45,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '4.2 mi',
-    waitTime: '22',
+    waitTime:22,
     coordinates: [17.3650, 78.5147],
     category: ['Hair Saloon']
   },
@@ -57,7 +57,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.5 mi',
-    waitTime: '25',
+    waitTime:25,
     coordinates: [17.4079, 78.4816],
     category: ['Mens Saloon']
   },
@@ -69,7 +69,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.9 mi',
-    waitTime: '12',
+    waitTime:12,
     coordinates: [17.4435, 78.4890],
     category: ['Mens Beauty']
   },
@@ -81,7 +81,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.6 mi',
-    waitTime: '16',
+    waitTime:16,
     coordinates: [17.3940, 78.5174],
     category: ['Modern Hair']
   },
@@ -93,7 +93,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.0 mi',
-    waitTime: '19',
+    waitTime:19,
     coordinates: [17.4239, 78.4569],
     category: ['Professional']
   },
@@ -105,7 +105,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.4 mi',
-    waitTime: '14',
+    waitTime:14,
     coordinates: [17.4008, 78.5290],
     category: ['Hair Saloon']
   },
@@ -117,7 +117,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.7 mi',
-    waitTime: '17',
+    waitTime:17,
     coordinates: [17.4065, 78.4772],
     category: ['Hair Saloon']
   },
@@ -129,7 +129,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.2 mi',
-    waitTime: '21',
+    waitTime:21,
     coordinates: [17.4126, 78.4962],
     category: ['Mens Saloon']
   },
@@ -141,7 +141,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '5.1 mi',
-    waitTime: '28',
+    waitTime:28,
     coordinates: [17.3665, 78.5550],
     category: ['Hair Saloon']
   },
@@ -153,7 +153,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '5.2 mi',
-    waitTime: '30',
+    waitTime:30,
     coordinates: [17.3665, 78.5550],
     category: ['Trendy Cuts']
   },
@@ -165,7 +165,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.8 mi',
-    waitTime: '18',
+    waitTime:18,
     coordinates: [17.4008, 78.5290],
     category: ['Hair Saloon']
   },
@@ -177,7 +177,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '4.8 mi',
-    waitTime: '26',
+    waitTime:26,
     coordinates: [17.495, 78.3975],
     category: ['Mens Beauty']
   },
@@ -189,7 +189,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.3 mi',
-    waitTime: '19',
+    waitTime:19,
     coordinates: [17.4626, 78.5413],
     category: ['Saloon']
   },
@@ -201,7 +201,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.3 mi',
-    waitTime: '15',
+    waitTime:15,
     coordinates: [17.4065, 78.4772],
     category: ['Spa', 'Beauty']
   },
@@ -213,7 +213,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.9 mi',
-    waitTime: '20',
+    waitTime:20,
     coordinates: [17.4008, 78.5290],
     category: ['Hair Saloon']
   },
@@ -225,7 +225,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '4.3 mi',
-    waitTime: '23',
+    waitTime:23,
     coordinates: [17.4022, 78.5478],
     category: ['Mens Beauty']
   },
@@ -237,7 +237,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '5.5 mi',
-    waitTime: '32',
+    waitTime:32,
     coordinates: [17.4485, 78.3908],
     category: ['Hair Saloon']
   },
@@ -249,7 +249,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 10 AM',
     distance: '2.8 mi',
-    waitTime: '24',
+    waitTime:24,
     coordinates: [17.4065, 78.4772],
     category: ['Style Cutter']
   },
@@ -261,7 +261,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 10 AM',
     distance: '4.5 mi',
-    waitTime: '35',
+    waitTime:35,
     coordinates: [17.4239, 78.4438],
     category: ['Premium Studio']
   },
@@ -273,7 +273,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 10 AM',
     distance: '4.6 mi',
-    waitTime: '38',
+    waitTime:38,
     coordinates: [17.4239, 78.4438],
     category: ['Salon', 'Spa']
   },
@@ -285,7 +285,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 10 AM',
     distance: '3.7 mi',
-    waitTime: '40',
+    waitTime:40,
     coordinates: [17.4299, 78.4569],
     category: ['Elite Salon']
   },
@@ -297,7 +297,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 10 AM',
     distance: '4.4 mi',
-    waitTime: '36',
+    waitTime:36,
     coordinates: [17.4239, 78.4438],
     category: ['Premium Salon']
   },
@@ -309,7 +309,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.1 mi',
-    waitTime: '22',
+    waitTime:22,
     coordinates: [17.4290, 78.4483],
     category: ['Beauty Parlour']
   },
@@ -321,7 +321,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.0 mi',
-    waitTime: '19',
+    waitTime:19,
     coordinates: [17.4239, 78.4569],
     category: ['Beauty Parlour']
   },
@@ -333,7 +333,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.9 mi',
-    waitTime: '27',
+    waitTime:27,
     coordinates: [17.4239, 78.4569],
     category: ['Ayurvedic', 'Spa']
   },
@@ -345,7 +345,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.2 mi',
-    waitTime: '24',
+    waitTime:24,
     coordinates: [17.4054, 78.4608],
     category: ['Family Salon']
   },
@@ -357,7 +357,7 @@ export const allSalons = [
     status: 'Opens soon',
     time: 'Opens 10 AM',
     distance: '5.0 mi',
-    waitTime: '45',
+    waitTime:45,
     coordinates: [17.4326, 78.4071],
     category: ['Premium']
   },
@@ -369,7 +369,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 10 AM',
     distance: '3.8 mi',
-    waitTime: '29',
+    waitTime:29,
     coordinates: [17.4523, 78.4687],
     category: ['Family Salon']
   },
@@ -381,7 +381,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '6.2 mi',
-    waitTime: '33',
+    waitTime:33,
     coordinates: [17.4061, 78.3749],
     category: ['Studio', 'Spa']
   },
@@ -393,7 +393,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '6.3 mi',
-    waitTime: '31',
+    waitTime:31,
     coordinates: [17.4061, 78.3749],
     category: ['Family Salon']
   },
@@ -405,7 +405,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '5.8 mi',
-    waitTime: '26',
+    waitTime:26,
     coordinates: [17.4474, 78.5270],
     category: ['Hair', 'Beauty']
   },
@@ -417,7 +417,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '4.1 mi',
-    waitTime: '21',
+    waitTime:21,
     coordinates: [17.4727, 78.4763],
     category: ['Hair Clinic']
   },
@@ -429,7 +429,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '5.4 mi',
-    waitTime: '28',
+    waitTime:28,
     coordinates: [17.3633, 78.4348],
     category: ['Designers']
   },
@@ -441,7 +441,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.1 mi',
-    waitTime: '14',
+    waitTime:14,
     coordinates: [17.3850, 78.4867],
     category: ['Mens Saloon']
   },
@@ -453,7 +453,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.9 mi',
-    waitTime: '17',
+    waitTime:17,
     coordinates: [17.3616, 78.4747],
     category: ['Beauty Parlour']
   },
@@ -465,7 +465,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.4 mi',
-    waitTime: '20',
+    waitTime:20,
     coordinates: [17.4126, 78.4962],
     category: ['Womens Beauty']
   },
@@ -477,7 +477,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.6 mi',
-    waitTime: '18',
+    waitTime:18,
     coordinates: [17.3850, 78.4867],
     category: ['Mens Salon']
   },
@@ -489,7 +489,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '5.5 mi',
-    waitTime: '25',
+    waitTime:25,
     coordinates: [17.3633, 78.4348],
     category: ['Mens Parlour']
   },
@@ -501,7 +501,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 10 AM',
     distance: '5.6 mi',
-    waitTime: '32',
+    waitTime:32,
     coordinates: [17.3633, 78.4348],
     category: ['Lounge Salon']
   },
@@ -513,7 +513,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.5 mi',
-    waitTime: '16',
+    waitTime:16,
     coordinates: [17.3940, 78.5174],
     category: ['Hair', 'Beauty']
   },
@@ -525,7 +525,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.7 mi',
-    waitTime: '19',
+    waitTime:19,
     coordinates: [17.4065, 78.4772],
     category: ['Hair Dressers']
   },
@@ -537,7 +537,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '1.9 mi',
-    waitTime: '13',
+    waitTime:13,
     coordinates: [17.3616, 78.4747],
     category: ['Hair Dresses']
   },
@@ -549,7 +549,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.8 mi',
-    waitTime: '21',
+    waitTime:21,
     coordinates: [17.4065, 78.4772],
     category: ['Hair Saloon']
   },
@@ -561,7 +561,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.0 mi',
-    waitTime: '15',
+    waitTime:15,
     coordinates: [17.3616, 78.4747],
     category: ['Hair Saloon']
   },
@@ -573,7 +573,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.4 mi',
-    waitTime: '17',
+    waitTime:17,
     coordinates: [17.3850, 78.4867],
     category: ['Spa', 'Beauty']
   },
@@ -585,7 +585,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.2 mi',
-    waitTime: '16',
+    waitTime:16,
     coordinates: [17.3616, 78.4747],
     category: ['Spa Saloon']
   },
@@ -597,7 +597,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.5 mi',
-    waitTime: '18',
+    waitTime:18,
     coordinates: [17.4065, 78.4772],
     category: ['Green Saloon']
   },
@@ -611,7 +611,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '1.8 mi',
-    waitTime: '15',
+    waitTime:15,
     coordinates: [13.0339, 80.2231],
     category: ['Creative Salon']
   },
@@ -623,7 +623,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '1.3 mi',
-    waitTime: '18',
+    waitTime:18,
     coordinates: [13.0569, 80.2425],
     category: ['Hair Salon']
   },
@@ -635,7 +635,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 8:30 AM',
     distance: '1.5 mi',
-    waitTime: '12',
+    waitTime:12,
     coordinates: [13.0339, 80.2619],
     category: ['Hair Studio']
   },
@@ -647,7 +647,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.1 mi',
-    waitTime: '20',
+    waitTime:20,
     coordinates: [13.0610, 80.2429],
     category: ['Hair Care']
   },
@@ -659,7 +659,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.5 mi',
-    waitTime: '25',
+    waitTime:25,
     coordinates: [13.0360, 80.1873],
     category: ['Salon']
   },
@@ -671,7 +671,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 8 AM',
     distance: '1.8 mi',
-    waitTime: '10',
+    waitTime:10,
     coordinates: [13.0639, 80.2748],
     category: ['Beauty Studio']
   },
@@ -683,7 +683,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '1.2 mi',
-    waitTime: '15',
+    waitTime:15,
     coordinates: [13.0229, 80.2447],
     category: ['Salon']
   },
@@ -695,7 +695,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '1.9 mi',
-    waitTime: '18',
+    waitTime:18,
     coordinates: [13.0527, 80.2250],
     category: ['Hair Care']
   },
@@ -707,7 +707,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.2 mi',
-    waitTime: '12',
+    waitTime:12,
     coordinates: [13.1044, 80.1637],
     category: ['Salon']
   },
@@ -719,7 +719,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '4.5 mi',
-    waitTime: '22',
+    waitTime:22,
     coordinates: [12.9039, 80.2401],
     category: ['Salon']
   },
@@ -731,7 +731,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.3 mi',
-    waitTime: '19',
+    waitTime:19,
     coordinates: [13.0325, 80.1888],
     category: ['Beauty Center']
   },
@@ -743,7 +743,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.1 mi',
-    waitTime: '16',
+    waitTime:16,
     coordinates: [13.0813, 80.1942],
     category: ['Salon']
   },
@@ -755,7 +755,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.0 mi',
-    waitTime: '11',
+    waitTime:11,
     coordinates: [13.0603, 80.2757],
     category: ['Hair Studio']
   },
@@ -767,7 +767,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '4.6 mi',
-    waitTime: '20',
+    waitTime:20,
     coordinates: [12.9039, 80.2401],
     category: ['Premium Salon']
   },
@@ -779,7 +779,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.5 mi',
-    waitTime: '17',
+    waitTime:17,
     coordinates: [13.0877, 80.1823],
     category: ['Salon']
   },
@@ -791,7 +791,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.8 mi',
-    waitTime: '14',
+    waitTime:14,
     coordinates: [12.9816, 80.2588],
     category: ['Salon']
   },
@@ -803,7 +803,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.0 mi',
-    waitTime: '16',
+    waitTime:16,
     coordinates: [13.0813, 80.1942],
     category: ['Salon']
   },
@@ -815,7 +815,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.7 mi',
-    waitTime: '13',
+    waitTime:13,
     coordinates: [13.0850, 80.2101],
     category: ['Salon']
   },
@@ -827,7 +827,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.2 mi',
-    waitTime: '15',
+    waitTime:15,
     coordinates: [13.0215, 80.2011],
     category: ['Saloon']
   },
@@ -839,7 +839,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '1.6 mi',
-    waitTime: '12',
+    waitTime:12,
     coordinates: [13.0418, 80.2341],
     category: ['Salon']
   },
@@ -851,7 +851,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.4 mi',
-    waitTime: '18',
+    waitTime:18,
     coordinates: [13.0985, 80.2273],
     category: ['Salon']
   },
@@ -863,7 +863,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.0 mi',
-    waitTime: '14',
+    waitTime:14,
     coordinates: [13.0338, 80.2232],
     category: ['Salon']
   },
@@ -875,7 +875,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '1.4 mi',
-    waitTime: '11',
+    waitTime:11,
     coordinates: [13.0569, 80.2506],
     category: ['Salon']
   },
@@ -887,7 +887,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '1.7 mi',
-    waitTime: '13',
+    waitTime:13,
     coordinates: [13.0761, 80.2838],
     category: ['Saloon']
   },
@@ -899,7 +899,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.8 mi',
-    waitTime: '15',
+    waitTime:15,
     coordinates: [13.0850, 80.2101],
     category: ['Salon']
   },
@@ -911,7 +911,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '4.8 mi',
-    waitTime: '26',
+    waitTime:26,
     coordinates: [13.1143, 80.1548],
     category: ['Creative Salon']
   },
@@ -923,7 +923,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '5.2 mi',
-    waitTime: '28',
+    waitTime:28,
     coordinates: [12.9137, 80.1450],
     category: ['Beauty Parlour']
   },
@@ -935,7 +935,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.4 mi',
-    waitTime: '16',
+    waitTime:16,
     coordinates: [13.0360, 80.1873],
     category: ['Salon']
   },
@@ -947,7 +947,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '1.9 mi',
-    waitTime: '14',
+    waitTime:14,
     coordinates: [13.0312, 80.2527],
     category: ['Salon']
   },
@@ -959,7 +959,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.3 mi',
-    waitTime: '17',
+    waitTime:17,
     coordinates: [13.1044, 80.1637],
     category: ['Salon']
   },
@@ -971,7 +971,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.3 mi',
-    waitTime: '15',
+    waitTime:15,
     coordinates: [13.0360, 80.1873],
     category: ['Salon']
   },
@@ -983,7 +983,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.6 mi',
-    waitTime: '21',
+    waitTime:21,
     coordinates: [13.0719, 80.1948],
     category: ['Salon']
   },
@@ -995,7 +995,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.4 mi',
-    waitTime: '18',
+    waitTime:18,
     coordinates: [13.0325, 80.1888],
     category: ['Salon']
   },
@@ -1007,7 +1007,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.9 mi',
-    waitTime: '16',
+    waitTime:16,
     coordinates: [13.0850, 80.2101],
     category: ['Salon']
   },
@@ -1019,7 +1019,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.2 mi',
-    waitTime: '19',
+    waitTime:19,
     coordinates: [13.0813, 80.1942],
     category: ['Salon']
   },
@@ -1031,7 +1031,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '4.1 mi',
-    waitTime: '23',
+    waitTime:23,
     coordinates: [13.1184, 80.2227],
     category: ['Salon']
   },
@@ -1043,7 +1043,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '5.3 mi',
-    waitTime: '27',
+    waitTime:27,
     coordinates: [12.9137, 80.1450],
     category: ['Beauty Salon']
   },
@@ -1055,7 +1055,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '1.5 mi',
-    waitTime: '14',
+    waitTime:14,
     coordinates: [13.0405, 80.2372],
     category: ['Salon']
   },
@@ -1067,7 +1067,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.7 mi',
-    waitTime: '20',
+    waitTime:20,
     coordinates: [12.9861, 80.1912],
     category: ['Salon']
   },
@@ -1079,7 +1079,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '1.4 mi',
-    waitTime: '12',
+    waitTime:12,
     coordinates: [13.0569, 80.2425],
     category: ['Salon']
   },
@@ -1091,7 +1091,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.6 mi',
-    waitTime: '17',
+    waitTime:17,
     coordinates: [13.0711, 80.2175],
     category: ['Salon']
   },
@@ -1103,7 +1103,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.1 mi',
-    waitTime: '15',
+    waitTime:15,
     coordinates: [13.0338, 80.2232],
     category: ['Salon']
   },
@@ -1115,7 +1115,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '1.6 mi',
-    waitTime: '16',
+    waitTime:16,
     coordinates: [13.0405, 80.2372],
     category: ['Premium Salon']
   },
@@ -1127,7 +1127,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.1 mi',
-    waitTime: '18',
+    waitTime:18,
     coordinates: [12.9779, 80.2526],
     category: ['Salon']
   },
@@ -1139,7 +1139,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.4 mi',
-    waitTime: '19',
+    waitTime:19,
     coordinates: [13.1044, 80.1637],
     category: ['Salon']
   },
@@ -1151,7 +1151,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '6.1 mi',
-    waitTime: '32',
+    waitTime:32,
     coordinates: [12.9249, 80.1000],
     category: ['Salon']
   },
@@ -1163,7 +1163,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '5.8 mi',
-    waitTime: '30',
+    waitTime:30,
     coordinates: [13.0094, 80.1679],
     category: ['Salon']
   },
@@ -1175,7 +1175,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '2.2 mi',
-    waitTime: '16',
+    waitTime:16,
     coordinates: [13.0338, 80.2232],
     category: ['Salon']
   },
@@ -1187,7 +1187,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '3.8 mi',
-    waitTime: '22',
+    waitTime:22,
     coordinates: [13.0850, 80.2101],
     category: ['Salon']
   },
@@ -1199,7 +1199,7 @@ export const allSalons = [
     status: 'Open now',
     time: 'Opens 9 AM',
     distance: '1.5 mi',
-    waitTime: '18',
+    waitTime:18,
     coordinates: [13.0405, 80.2372],
     category: ['Green Saloon']
   }

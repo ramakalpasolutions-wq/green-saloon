@@ -9,6 +9,7 @@ function BookingStatusContent() {
   const [currentWaitTime, setCurrentWaitTime] = useState(0);
   const [currentQueuePosition, setCurrentQueuePosition] = useState(0);
   const [bookingData, setBookingData] = useState(null);
+  const [checkedInTime, setCheckedInTime] = useState(''); // Add this state
   
   // Use ref to store initial values that shouldn't change
   const initialDataRef = useRef({
@@ -21,31 +22,41 @@ function BookingStatusContent() {
   const salonName = searchParams.get('salon') || 'Green Saloon T Nagar';
 
   // Load booking from localStorage
-  const loadBookingFromStorage = () => {
-    if (typeof window !== 'undefined') {
-      const bookings = localStorage.getItem('green_saloon_bookings');
-      if (bookings) {
-        const allBookings = JSON.parse(bookings);
-        const booking = allBookings.find(b => b.id === bookingId);
-        if (booking) {
-          setBookingData(booking);
-          return {
-            queueNumber: booking.queueNumber,
-            waitTime: booking.waitTime
-          };
-        }
+  // Load booking from localStorage
+const loadBookingFromStorage = () => {
+  if (typeof window !== 'undefined') {
+    const bookings = localStorage.getItem('green_saloon_bookings');
+    console.log('📦 Raw localStorage:', bookings);
+    
+    if (bookings) {
+      const allBookings = JSON.parse(bookings);
+      console.log('📋 All bookings:', allBookings);
+      
+      const booking = allBookings.find(b => b.id === bookingId);
+      console.log('🎯 Found booking:', booking);
+      
+      if (booking) {
+        setBookingData(booking);
+        return {
+          queueNumber: booking.queueNumber,
+          waitTime: parseInt(booking.waitTime) || 15
+        };
       }
     }
-    
-    // Fallback to URL params
-    const urlWaitTime = parseInt(searchParams.get('waitTime'));
-    const urlQueue = parseInt(searchParams.get('queue')) || Math.floor(Math.random() * 20) + 1;
-    
-    return {
-      queueNumber: urlQueue,
-      waitTime: urlWaitTime || (urlQueue * 5)
-    };
+  }
+  
+  // Fallback to URL params
+  const urlWaitTime = parseInt(searchParams.get('waitTime'));
+  const urlQueue = parseInt(searchParams.get('queue')) || Math.floor(Math.random() * 20) + 1;
+  
+  console.log('🔗 Fallback to URL params:', { urlWaitTime, urlQueue });
+  
+  return {
+    queueNumber: urlQueue,
+    waitTime: urlWaitTime || (urlQueue * 5)
   };
+};
+
 
   // Calculate wait time based on queue position
   const calculateWaitTime = (queuePosition) => {
@@ -54,6 +65,9 @@ function BookingStatusContent() {
   };
 
   useEffect(() => {
+    // Set checked-in time on client side only
+    setCheckedInTime(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }));
+    
     // Only load initial data once
     if (!initialDataRef.current.loaded) {
       const bookingInfo = loadBookingFromStorage();
@@ -112,7 +126,7 @@ function BookingStatusContent() {
       clearInterval(storageCheckInterval);
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [bookingId]); // Only depend on bookingId
+  }, [bookingId]);
 
   const displayQueueNumber = Math.ceil(currentQueuePosition);
 
@@ -286,7 +300,9 @@ function BookingStatusContent() {
               </div>
               <div className="flex-1">
                 <p className="text-sm text-gray-500">Checked in at</p>
-                <p className="font-semibold text-gray-900">{new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</p>
+                <p className="font-semibold text-gray-900">
+                  {checkedInTime || 'Loading...'}
+                </p>
               </div>
             </div>
 

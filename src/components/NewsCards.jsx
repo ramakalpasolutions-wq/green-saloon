@@ -12,7 +12,7 @@ export default function NewsCards() {
     },
     {
       title: 'Work greatly',
-      description: 'Grow your career at a Green Saloon, whether that\'s as a stylist, manager or receptionist.',
+      description: 'Grow your career at a Great Cuts, whether that\'s as a stylist, manager or receptionist.',
       cta: 'Learn more'
     }
   ];

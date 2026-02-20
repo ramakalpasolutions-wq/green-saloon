@@ -22,7 +22,7 @@ function BookingStatusContent() {
   });
 
   const bookingId = searchParams.get('id') || 'GS' + Date.now().toString().slice(-6);
-  const salonName = searchParams.get('salon') || 'Green Saloon T Nagar';
+  const salonName = searchParams.get('salon') || 'Great Cuts T Nagar';
 
   // Load booking from localStorage using bookingService
   const loadBookingFromStorage = () => {

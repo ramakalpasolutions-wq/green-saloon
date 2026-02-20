@@ -1202,5 +1202,115 @@ export const allSalons = [
     waitTime:18,
     coordinates: [13.0405, 80.2372],
     category: ['Green Saloon']
-  }
+  },
+  // ADDITIONAL CHENNAI SALONS (9) - Nungambakkam area
+{
+  id: 101,
+  name: 'Sanaas Beauty Parlour',
+  address: 'No G-21 Eldorado 112, Nungambakkam High Road, Mount Road, Chennai - 600002, Opposite Pizza Corner Nungambakkam',
+  phone: '+91 9841766013',
+  status: 'Open now',
+  time: 'Opens 9 AM',
+  distance: '1.3 mi',
+  waitTime: 15,
+  coordinates: [13.0569, 80.2425],
+  category: ['Beauty Parlour']
+},
+{
+  id: 102,
+  name: 'Limelite Salon & Spa',
+  address: 'No 17/3 Pembroke House 1st Floor, Shaffee Mohammed Street Off Knk Road S N Road, Nungambakkam, Chennai - 600034, Above Coffee Day',
+  phone: '+91 9884837526',
+  status: 'Open now',
+  time: 'Opens 9 AM',
+  distance: '1.4 mi',
+  waitTime: 20,
+  coordinates: [13.0569, 80.2425],
+  category: ['Salon', 'Spa']
+},
+{
+  id: 103,
+  name: 'Essensuals Hairdressing By Toni & Guy',
+  address: 'Old Door No 131 New Door No 167 Yesde House 2nd Floor, Valluvar Kottam High Road, Nungambakkam, Chennai - 600034, Above Nuts & Spices',
+  phone: '+91 9566128116',
+  status: 'Open now',
+  time: 'Opens 10 AM',
+  distance: '1.5 mi',
+  waitTime: 25,
+  coordinates: [13.0534, 80.2401],
+  category: ['Hair Salon']
+},
+{
+  id: 104,
+  name: 'Naturals Lounge',
+  address: 'Old No 47/2 New No 5/2, Sterling Avenue Sterling Road, Nungambakkam, Chennai - 600034, Near Just Casuals And Mexican Grill',
+  phone: '+91 9841009677',
+  status: 'Open now',
+  time: 'Opens 9 AM',
+  distance: '1.6 mi',
+  waitTime: 18,
+  coordinates: [13.0554, 80.2389],
+  category: ['Lounge Salon']
+},
+{
+  id: 105,
+  name: 'Toni & Guy',
+  address: 'Platinum 34, Basement, Khader Nawaz Khan Road, Nungambakkam, Chennai - 600034',
+  phone: '+91 9841451488',
+  status: 'Open now',
+  time: 'Opens 10 AM',
+  distance: '1.4 mi',
+  waitTime: 30,
+  coordinates: [13.0542, 80.2411],
+  category: ['Premium Salon']
+},
+{
+  id: 106,
+  name: 'YLG Salon',
+  address: 'No 20 Crystal Lawn Ground Floor, Haddows Road 1st Street Wallace Garden Road, Nungambakkam, Chennai - 600034, Opposite Harley Davidson Bike Showroom',
+  phone: '+91 9952036777',
+  status: 'Open now',
+  time: 'Opens 9 AM',
+  distance: '1.5 mi',
+  waitTime: 22,
+  coordinates: [13.0561, 80.2432],
+  category: ['Salon']
+},
+{
+  id: 107,
+  name: 'Raj Grover Beauty Salon',
+  address: 'No 10 Shop No 1 Shyams Garden, Khader Nawaz Khan Road, Nungambakkam, Chennai - 600034, Above O2 Health Club',
+  phone: '+91 9282110920',
+  status: 'Open now',
+  time: 'Opens 9 AM',
+  distance: '1.4 mi',
+  waitTime: 16,
+  coordinates: [13.0542, 80.2411],
+  category: ['Beauty Salon']
+},
+{
+  id: 108,
+  name: 'Spa Opulence',
+  address: 'No 4/22 2nd Floor, Rutland Gate 4th Street, Nungambakkam, Chennai - 600034, Above Ritu Kumar',
+  phone: '+91 9688577066',
+  status: 'Open now',
+  time: 'Opens 10 AM',
+  distance: '1.6 mi',
+  waitTime: 35,
+  coordinates: [13.0516, 80.2398],
+  category: ['Spa', 'Beauty']
+},
+{
+  id: 109,
+  name: 'Studio Profile',
+  address: 'No 1 Shop No 10 Shyam Garden, Khader Nawaz Khan Road, Nungambakkam, Chennai - 600034, Above O2 Gym',
+  phone: '+91 9884563157',
+  status: 'Open now',
+  time: 'Opens 9 AM',
+  distance: '1.4 mi',
+  waitTime: 20,
+  coordinates: [13.0542, 80.2411],
+  category: ['Hair Studio']
+},
+
 ];

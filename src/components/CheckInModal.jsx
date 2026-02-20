@@ -4,11 +4,15 @@ import toast from 'react-hot-toast';
 import { bookingService } from '@/utils/bookingService';
 import Image from 'next/image';
 
+
 export default function CheckInModal({ salon, isOpen, onClose }) {
   const [step, setStep] = useState(1);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
   const [selectedStaff, setSelectedStaff] = useState(null);
+  
+  // ✅ NEW: Capture booking timestamp when modal opens
+  const [bookingTimestamp, setBookingTimestamp] = useState(null);
 
   const services = [
     { id: 1, name: "Classic Haircut", price: "₹299", duration: "30 min" },
@@ -19,41 +23,38 @@ export default function CheckInModal({ salon, isOpen, onClose }) {
     { id: 6, name: "Hair Spa", price: "₹999", duration: "60 min" }
   ];
 
-  // All 20 staff members with real photos from Unsplash
-  // All 30 staff members with real photos from Unsplash (mix of male and female)
-const allStaff = [
-  { id: 1, name: "Rajesh Kumar", role: "Master Stylist", experience: "15+ years", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop", rating: 4.9 },
-  { id: 2, name: "Priya Sharma", role: "Senior Stylist", experience: "12+ years", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop", rating: 4.9 },
-  { id: 3, name: "Sanjay Reddy", role: "Senior Stylist", experience: "10+ years", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop", rating: 4.8 },
-  { id: 4, name: "Kavya Menon", role: "Hair Color Expert", experience: "11+ years", image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop", rating: 4.9 },
-  { id: 5, name: "Venkat Rao", role: "Beard Specialist", experience: "8+ years", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop", rating: 4.9 },
-  { id: 6, name: "Divya Patel", role: "Hair Spa Specialist", experience: "9+ years", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop", rating: 4.8 },
-  { id: 7, name: "Kiran Babu", role: "Hair Color Expert", experience: "12+ years", image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=150&h=150&fit=crop", rating: 4.7 },
-  { id: 8, name: "Sneha Iyer", role: "Senior Stylist", experience: "10+ years", image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop", rating: 4.8 },
-  { id: 9, name: "Arun Kumar", role: "Master Stylist", experience: "14+ years", image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop", rating: 4.8 },
-  { id: 10, name: "Anjali Nair", role: "Bridal Specialist", experience: "13+ years", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop", rating: 4.9 },
-  { id: 11, name: "Prakash Rao", role: "Senior Stylist", experience: "9+ years", image: "https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=150&h=150&fit=crop", rating: 4.6 },
-  { id: 12, name: "Meera Krishnan", role: "Hair Treatment Expert", experience: "11+ years", image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&h=150&fit=crop", rating: 4.9 },
-  { id: 13, name: "Suresh Babu", role: "Fade Expert", experience: "11+ years", image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&h=150&fit=crop", rating: 4.9 },
-  { id: 14, name: "Lakshmi Devi", role: "Master Stylist", experience: "14+ years", image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop", rating: 4.8 },
-  { id: 15, name: "Ramesh Kumar", role: "Hair Specialist", experience: "13+ years", image: "https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=150&h=150&fit=crop", rating: 4.7 },
-  { id: 16, name: "Ritu Varma", role: "Color & Highlights Expert", experience: "10+ years", image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&h=150&fit=crop", rating: 4.9 },
-  { id: 17, name: "Vijay Prakash", role: "Master Barber", experience: "16+ years", image: "https://images.unsplash.com/photo-1507081323647-4d250478b919?w=150&h=150&fit=crop", rating: 4.9 },
-  { id: 18, name: "Swathi Reddy", role: "Senior Stylist", experience: "12+ years", image: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=150&h=150&fit=crop", rating: 4.8 },
-  { id: 19, name: "Kumar Raja", role: "Style Expert", experience: "10+ years", image: "https://images.unsplash.com/photo-1531891437562-4301cf35b7e4?w=150&h=150&fit=crop", rating: 4.8 },
-  { id: 20, name: "Nisha Rani", role: "Keratin Specialist", experience: "9+ years", image: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=150&h=150&fit=crop", rating: 4.7 },
-  { id: 21, name: "Dinesh Kumar", role: "Senior Stylist", experience: "12+ years", image: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=150&h=150&fit=crop", rating: 4.7 },
-  { id: 22, name: "Pooja Hegde", role: "Makeup & Hair Artist", experience: "11+ years", image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&h=150&fit=crop", rating: 4.9 },
-  { id: 23, name: "Anand Raj", role: "Beard Artist", experience: "8+ years", image: "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=150&h=150&fit=crop", rating: 4.8 },
-  { id: 24, name: "Deepa Krishnan", role: "Hair Spa Specialist", experience: "10+ years", image: "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?w=150&h=150&fit=crop", rating: 4.8 },
-  { id: 25, name: "Mohan Krishna", role: "Hair Expert", experience: "11+ years", image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&h=150&fit=crop", rating: 4.6 },
-  { id: 26, name: "Aishwarya Rao", role: "Senior Stylist", experience: "13+ years", image: "https://images.unsplash.com/photo-1506863530036-1efeddceb993?w=150&h=150&fit=crop", rating: 4.9 },
-  { id: 27, name: "Ashok Kumar", role: "Master Stylist", experience: "15+ years", image: "https://images.unsplash.com/photo-1504199367641-aba8151af406?w=150&h=150&fit=crop", rating: 4.9 },
-  { id: 28, name: "Yamini Reddy", role: "Bridal Hair Expert", experience: "12+ years", image: "https://images.unsplash.com/photo-1479936343636-73cdc5aae0c3?w=150&h=150&fit=crop", rating: 4.9 },
-  { id: 29, name: "Gopal Reddy", role: "Senior Barber", experience: "13+ years", image: "https://images.unsplash.com/photo-1521119989659-a83eee488004?w=150&h=150&fit=crop", rating: 4.8 },
-  { id: 30, name: "Radha Menon", role: "Hair Treatment Specialist", experience: "11+ years", image: "https://images.unsplash.com/photo-1551843073-4a9a5b6fcd5f?w=150&h=150&fit=crop", rating: 4.8 }
-];
-
+  const allStaff = [
+    { id: 1, name: "Rajesh Kumar", role: "Master Stylist", experience: "15+ years", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 2, name: "Priya Sharma", role: "Senior Stylist", experience: "12+ years", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 3, name: "Sanjay Reddy", role: "Senior Stylist", experience: "10+ years", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 4, name: "Kavya Menon", role: "Hair Color Expert", experience: "11+ years", image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 5, name: "Venkat Rao", role: "Beard Specialist", experience: "8+ years", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 6, name: "Divya Patel", role: "Hair Spa Specialist", experience: "9+ years", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 7, name: "Kiran Babu", role: "Hair Color Expert", experience: "12+ years", image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=150&h=150&fit=crop", rating: 4.7 },
+    { id: 8, name: "Sneha Iyer", role: "Senior Stylist", experience: "10+ years", image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 9, name: "Arun Kumar", role: "Master Stylist", experience: "14+ years", image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 10, name: "Anjali Nair", role: "Bridal Specialist", experience: "13+ years", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 11, name: "Prakash Rao", role: "Senior Stylist", experience: "9+ years", image: "https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=150&h=150&fit=crop", rating: 4.6 },
+    { id: 12, name: "Meera Krishnan", role: "Hair Treatment Expert", experience: "11+ years", image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 13, name: "Suresh Babu", role: "Fade Expert", experience: "11+ years", image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 14, name: "Lakshmi Devi", role: "Master Stylist", experience: "14+ years", image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 15, name: "Ramesh Kumar", role: "Hair Specialist", experience: "13+ years", image: "https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=150&h=150&fit=crop", rating: 4.7 },
+    { id: 16, name: "Ritu Varma", role: "Color & Highlights Expert", experience: "10+ years", image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 17, name: "Vijay Prakash", role: "Master Barber", experience: "16+ years", image: "https://images.unsplash.com/photo-1507081323647-4d250478b919?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 18, name: "Swathi Reddy", role: "Senior Stylist", experience: "12+ years", image: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 19, name: "Kumar Raja", role: "Style Expert", experience: "10+ years", image: "https://images.unsplash.com/photo-1531891437562-4301cf35b7e4?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 20, name: "Nisha Rani", role: "Keratin Specialist", experience: "9+ years", image: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=150&h=150&fit=crop", rating: 4.7 },
+    { id: 21, name: "Dinesh Kumar", role: "Senior Stylist", experience: "12+ years", image: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=150&h=150&fit=crop", rating: 4.7 },
+    { id: 22, name: "Pooja Hegde", role: "Makeup & Hair Artist", experience: "11+ years", image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 23, name: "Anand Raj", role: "Beard Artist", experience: "8+ years", image: "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 24, name: "Deepa Krishnan", role: "Hair Spa Specialist", experience: "10+ years", image: "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 25, name: "Mohan Krishna", role: "Hair Expert", experience: "11+ years", image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&h=150&fit=crop", rating: 4.6 },
+    { id: 26, name: "Aishwarya Rao", role: "Senior Stylist", experience: "13+ years", image: "https://images.unsplash.com/photo-1506863530036-1efeddceb993?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 27, name: "Ashok Kumar", role: "Master Stylist", experience: "15+ years", image: "https://images.unsplash.com/photo-1504199367641-aba8151af406?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 28, name: "Yamini Reddy", role: "Bridal Hair Expert", experience: "12+ years", image: "https://images.unsplash.com/photo-1479936343636-73cdc5aae0c3?w=150&h=150&fit=crop", rating: 4.9 },
+    { id: 29, name: "Gopal Reddy", role: "Senior Barber", experience: "13+ years", image: "https://images.unsplash.com/photo-1521119989659-a83eee488004?w=150&h=150&fit=crop", rating: 4.8 },
+    { id: 30, name: "Radha Menon", role: "Hair Treatment Specialist", experience: "11+ years", image: "https://images.unsplash.com/photo-1551843073-4a9a5b6fcd5f?w=150&h=150&fit=crop", rating: 4.8 }
+  ];
 
   // Get 3-5 random staff for this salon (consistent per salon ID)
   const salonStaff = useMemo(() => {
@@ -65,6 +66,16 @@ const allStaff = [
     
     return allStaff.slice(startIndex, startIndex + staffCount);
   }, [salon?.id]);
+
+  // ✅ CAPTURE TIMESTAMP ONCE WHEN MODAL OPENS
+  useEffect(() => {
+    if (isOpen && salon && !bookingTimestamp) {
+      const timestamp = new Date();
+      setBookingTimestamp(timestamp);
+      console.log('🕐 Booking timestamp captured:', timestamp.toISOString());
+      console.log('🕐 Display time:', timestamp.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }));
+    }
+  }, [isOpen, salon]);
 
   // ESC key handler
   useEffect(() => {
@@ -121,18 +132,14 @@ const allStaff = [
     const queueNumber = Math.floor(Math.random() * 20) + 1;
     const bookingId = 'GS' + Date.now().toString().slice(-6);
     
-    // 🔧 IMPROVED: Better parsing of wait time
-    let actualWaitTime = 15; // default fallback
-    
+    let actualWaitTime = 15;
     if (salon?.waitTime) {
-      // Remove any non-numeric characters and parse
       const parsed = parseInt(String(salon.waitTime).replace(/\D/g, ''));
       if (!isNaN(parsed) && parsed > 0) {
         actualWaitTime = parsed;
       }
-    }
-    
-    // 🔍 DETAILED DEBUG LOGGING
+    }  // ✅ if block closes here, still inside setTimeout
+
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('🏪 SALON DATA:', salon);
     console.log('⏰ SALON WAIT TIME (raw):', salon?.waitTime);
@@ -144,20 +151,20 @@ const allStaff = [
     const bookingData = {
       id: bookingId,
       phone: phoneNumber,
-      salonName: salon?.name || 'Great Cuts',
+      salonName: salon?.name || 'Green Saloon',
       address: salon?.address || '',
       date: new Date().toISOString().split('T')[0],
-      time: 'Walk-in',
+      time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }),
       status: 'confirmed',
       queueNumber: queueNumber,
-      waitTime: actualWaitTime, // Use cleaned wait time
-      services: selectedServices.length > 0 
+      waitTime: actualWaitTime,
+      services: selectedServices.length > 0
         ? selectedServices.map(id => {
             const service = services.find(s => s.id === id);
             return service.name;
           })
         : ['Walk-in service'],
-      staff: selectedStaff 
+      staff: selectedStaff
         ? salonStaff.find(s => s.id === selectedStaff)?.name
         : 'Any available',
       total: getTotalPrice(),
@@ -166,8 +173,6 @@ const allStaff = [
     
     bookingService.addBooking(bookingData);
     
-    console.log('💾 BOOKING DATA SAVED:', bookingData);
-    
     toast.success('Booking confirmed!', {
       duration: 2000,
       icon: '✅',
@@ -175,20 +180,17 @@ const allStaff = [
     
     const queryParams = new URLSearchParams({
       id: bookingId,
-      salon: salon?.name || 'Great Cuts',
+      salon: salon?.name || 'Green Saloon',
       queue: queueNumber.toString(),
       waitTime: actualWaitTime.toString()
     });
-    
-    console.log('🔗 URL PARAMS:', queryParams.toString());
-    console.log('🔗 FULL URL:', `/booking-status?${queryParams.toString()}`);
     
     window.location.href = `/booking-status?${queryParams.toString()}`;
     
     onClose();
     resetForm();
-  }, 1500);
-};
+  }, 1500);  // ✅ setTimeout closes here
+};             // ✅ handleConfirm closes here
 
 
   const resetForm = () => {
@@ -196,6 +198,7 @@ const allStaff = [
     setPhoneNumber('');
     setSelectedServices([]);
     setSelectedStaff(null);
+    setBookingTimestamp(null); // ✅ Reset timestamp
   };
 
   const handleClose = () => {
@@ -545,7 +548,6 @@ const allStaff = [
               </button>
             )}
             
-            {/* Skip button - only show on steps 2 and 3 */}
             {step >= 2 && step <= 3 && (
               <button
                 onClick={handleSkip}
@@ -567,11 +569,6 @@ const allStaff = [
               {step === 4 ? 'Confirm Booking' : 'Continue'}
             </button>
           </div>
-          
-          {/* ESC hint */}
-          {/* <p className="text-center text-xs text-gray-500 mt-3">
-            Press <kbd className="px-2 py-1 bg-gray-100 border border-gray-300 rounded text-gray-700 font-mono">ESC</kbd> to close
-          </p> */}
         </div>
       </div>
     </div>

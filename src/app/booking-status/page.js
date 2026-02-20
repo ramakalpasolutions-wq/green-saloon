@@ -2,6 +2,8 @@
 import { useEffect, useState, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { bookingService } from '@/utils/bookingService';
+
 
 function BookingStatusContent() {
   const searchParams = useSearchParams();
@@ -9,76 +11,96 @@ function BookingStatusContent() {
   const [currentWaitTime, setCurrentWaitTime] = useState(0);
   const [currentQueuePosition, setCurrentQueuePosition] = useState(0);
   const [bookingData, setBookingData] = useState(null);
-  const [checkedInTime, setCheckedInTime] = useState(''); // Add this state
+  const [checkedInTime, setCheckedInTime] = useState('');
   
   // Use ref to store initial values that shouldn't change
   const initialDataRef = useRef({
     loaded: false,
     waitTime: 0,
-    queueNumber: 0
+    queueNumber: 0,
+    bookingTime: null
   });
 
   const bookingId = searchParams.get('id') || 'GS' + Date.now().toString().slice(-6);
   const salonName = searchParams.get('salon') || 'Great Cuts T Nagar';
 
-  // Load booking from localStorage
-  // Load booking from localStorage
-const loadBookingFromStorage = () => {
-  if (typeof window !== 'undefined') {
-    const bookings = localStorage.getItem('green_saloon_bookings');
-    console.log('📦 Raw localStorage:', bookings);
-    
-    if (bookings) {
-      const allBookings = JSON.parse(bookings);
-      console.log('📋 All bookings:', allBookings);
-      
-      const booking = allBookings.find(b => b.id === bookingId);
+  // Load booking from localStorage using bookingService
+  const loadBookingFromStorage = () => {
+    if (typeof window !== 'undefined') {
+      const booking = bookingService.getBookingById(bookingId);
       console.log('🎯 Found booking:', booking);
       
       if (booking) {
         setBookingData(booking);
         return {
           queueNumber: booking.queueNumber,
-          waitTime: parseInt(booking.waitTime) || 15
+          waitTime: parseInt(booking.waitTime) || 15, // ✅ Use actual salon wait time
+          bookingTime: booking.bookingTimestamp || booking.time
         };
       }
     }
-  }
-  
-  // Fallback to URL params
-  const urlWaitTime = parseInt(searchParams.get('waitTime'));
-  const urlQueue = parseInt(searchParams.get('queue')) || Math.floor(Math.random() * 20) + 1;
-  
-  console.log('🔗 Fallback to URL params:', { urlWaitTime, urlQueue });
-  
-  return {
-    queueNumber: urlQueue,
-    waitTime: urlWaitTime || (urlQueue * 5)
+    
+    // Fallback to URL params
+    const urlWaitTime = parseInt(searchParams.get('waitTime'));
+    const urlQueue = parseInt(searchParams.get('queue')) || Math.floor(Math.random() * 20) + 1;
+    const urlBookingTime = searchParams.get('bookingTime');
+    
+    console.log('🔗 Fallback to URL params:', { urlWaitTime, urlQueue, urlBookingTime });
+    
+    return {
+      queueNumber: urlQueue,
+      waitTime: urlWaitTime || 15, // ✅ Use actual wait time, not calculated
+      bookingTime: urlBookingTime
+    };
   };
-};
 
-
-  // Calculate wait time based on queue position
-  const calculateWaitTime = (queuePosition) => {
-    const avgServiceTime = 5;
-    return Math.max(0, Math.round((queuePosition - 1) * avgServiceTime));
-  };
+  // ✅ REMOVED: calculateWaitTime function - we use actual salon wait time instead
 
   useEffect(() => {
-    // Set checked-in time on client side only
-    setCheckedInTime(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }));
-    
-    // Only load initial data once
     if (!initialDataRef.current.loaded) {
       const bookingInfo = loadBookingFromStorage();
+      
+      // Parse and store the booking timestamp
+      let bookingTimeObj = null;
+      if (bookingInfo.bookingTime) {
+        try {
+          bookingTimeObj = new Date(bookingInfo.bookingTime);
+          console.log('🕐 Parsed booking time:', bookingTimeObj.toISOString());
+        } catch (e) {
+          console.error('❌ Error parsing booking time:', e);
+        }
+      }
+      
+      // Format the time for display (this never changes)
+      const formattedTime = bookingTimeObj 
+        ? bookingTimeObj.toLocaleTimeString('en-IN', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true 
+          })
+        : new Date().toLocaleTimeString('en-IN', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true 
+          });
+      
+      setCheckedInTime(formattedTime);
+      
       initialDataRef.current = {
         loaded: true,
-        waitTime: bookingInfo.waitTime,
-        queueNumber: bookingInfo.queueNumber
+        waitTime: bookingInfo.waitTime, // ✅ Store actual salon wait time
+        queueNumber: bookingInfo.queueNumber,
+        bookingTime: bookingTimeObj
       };
       
       setCurrentQueuePosition(bookingInfo.queueNumber);
-      setCurrentWaitTime(bookingInfo.waitTime);
+      setCurrentWaitTime(bookingInfo.waitTime); // ✅ Start with actual wait time
+      
+      console.log('✅ Initial booking data loaded:', {
+        bookingTime: formattedTime,
+        waitTime: bookingInfo.waitTime,
+        queueNumber: bookingInfo.queueNumber
+      });
     }
 
     const handleStorageChange = () => {
@@ -99,7 +121,7 @@ const loadBookingFromStorage = () => {
       }
     }, 2000);
 
-    // Countdown timer
+    // ✅ UPDATED: Countdown timer - decreases wait time proportionally with queue
     const queueMoveInterval = 300; // 5 minutes = 300 seconds
     const updateFrequency = 1; // Update every 1 second
 
@@ -108,12 +130,14 @@ const loadBookingFromStorage = () => {
         const decrementAmount = updateFrequency / queueMoveInterval;
         const newPosition = Math.max(1, prev - decrementAmount);
         
-        // Calculate new wait time based on queue movement
-        const newWaitTime = calculateWaitTime(Math.ceil(newPosition));
+        // ✅ Calculate wait time proportionally based on queue movement
+        const progress = (initialDataRef.current.queueNumber - newPosition) / (initialDataRef.current.queueNumber - 1);
+        const newWaitTime = Math.max(0, Math.round(initialDataRef.current.waitTime * (1 - progress)));
         setCurrentWaitTime(newWaitTime);
         
         if (newPosition <= 1) {
           clearInterval(timer);
+          setCurrentWaitTime(0);
           return 1;
         }
         
@@ -226,7 +250,7 @@ const loadBookingFromStorage = () => {
             </div>
 
             <div className="mt-4 text-xs text-gray-500">
-              ~5 min per person • Based on current queue
+              Based on salon's current wait time
             </div>
           </div>
 
@@ -292,6 +316,7 @@ const loadBookingFromStorage = () => {
               </div>
             </div>
 
+            {/* ✅ FIXED: Shows consistent captured timestamp */}
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -306,6 +331,7 @@ const loadBookingFromStorage = () => {
               </div>
             </div>
 
+            {/* ✅ FIXED: Expected service time = booking time + current wait time */}
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -315,7 +341,10 @@ const loadBookingFromStorage = () => {
               <div className="flex-1">
                 <p className="text-sm text-gray-500">Expected Service Time</p>
                 <p className="font-semibold text-gray-900">
-                  {new Date(Date.now() + currentWaitTime * 60000).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                  {initialDataRef.current.bookingTime
+                    ? new Date(initialDataRef.current.bookingTime.getTime() + currentWaitTime * 60000).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+                    : new Date(Date.now() + currentWaitTime * 60000).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+                  }
                 </p>
               </div>
             </div>
@@ -384,6 +413,7 @@ const loadBookingFromStorage = () => {
     </div>
   );
 }
+
 
 // Main component with Suspense wrapper
 export default function BookingStatusPage() {

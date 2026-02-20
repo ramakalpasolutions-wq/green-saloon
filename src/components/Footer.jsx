@@ -10,7 +10,7 @@ export default function Footer() {
               Great Cuts
             </h3>
             <p className="text-gray-400 text-sm sm:text-base">
-              Fresh cuts. Green style. Great vibes.
+              Fresh cuts. Great style. Great vibes.
             </p>
           </div>
           

@@ -7,7 +7,7 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="sm:col-span-2 lg:col-span-1">
             <h3 className="text-2xl sm:text-3xl font-bold text-emerald-400 mb-3 sm:mb-4">
-              Green Saloon
+              Great Cuts
             </h3>
             <p className="text-gray-400 text-sm sm:text-base">
               Fresh cuts. Green style. Great vibes.
@@ -62,9 +62,9 @@ export default function Footer() {
           <div>
             <h4 className="font-bold mb-3 sm:mb-4 text-base sm:text-lg">Contact</h4>
             <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
-              <li>Email: info@greensaloon.com</li>
-              <li>Phone: +91 123 456 7890</li>
-              <li>Guntur, Andhra Pradesh</li>
+              <li>Email: info@greatcuts.in</li>
+              <li>Phone: +91 9390533233</li>
+              <li>Banjara Hills ,Hyderabad</li>
             </ul>
           </div>
         </div>
@@ -88,7 +88,7 @@ export default function Footer() {
             </p>
             
             <p className="text-gray-500 text-xs sm:text-sm">
-              &copy; 2026 Green Saloon. All rights reserved.
+              &copy; 2026 Great Cuts. All rights reserved.
             </p>
           </div>
         </div>

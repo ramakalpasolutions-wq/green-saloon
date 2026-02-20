@@ -8,7 +8,7 @@ export default function Features() {
     {
       icon: '✅',
       title: 'Consistent Quality',
-      description: 'Feel confident that you\'ll get the same haircut from any Green Saloon stylist, every time.'
+      description: 'Feel confident that you\'ll get the same haircut from any Great Cuts stylist, every time.'
     }
   ];
 

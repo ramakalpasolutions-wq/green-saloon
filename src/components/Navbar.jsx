@@ -12,7 +12,7 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="text-2xl sm:text-3xl font-bold text-emerald-600 hover:text-emerald-700 transition">
-              Green Saloon
+              Great Cuts
             </Link>
           </div>
 

@@ -7,8 +7,8 @@ import { Toaster } from 'react-hot-toast';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Green Saloon - Fresh Cuts, Great Vibes',
-  description: 'Book your haircut online at Green Saloon. Professional styling, convenient check-in.',
+  title: 'Great cuts - Fresh Cuts, Great Vibes',
+  description: 'Book your haircut online at Great cuts. Professional styling, convenient check-in.',
 };
 
 export default function RootLayout({ children }) {

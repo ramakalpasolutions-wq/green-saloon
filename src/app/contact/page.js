@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Contact Us | Green Saloon',
-  description: 'Get in touch with Green Saloon for bookings, feedback, and support.',
+  title: 'Contact Us | Great Cuts',
+  description: 'Get in touch with Great Cuts for bookings, feedback, and support.',
 };
 
 export default function ContactPage() {
@@ -10,7 +10,7 @@ export default function ContactPage() {
         {/* Heading */}
         <div className="text-center mb-10">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
-            Contact Green Saloon
+            Contact Great Cuts
           </h1>
           <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
             Have questions about bookings, services, or feedback? Fill out the form below and our team will get back to you soon.

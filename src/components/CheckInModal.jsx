@@ -144,7 +144,7 @@ const allStaff = [
     const bookingData = {
       id: bookingId,
       phone: phoneNumber,
-      salonName: salon?.name || 'Green Saloon',
+      salonName: salon?.name || 'Great Cuts',
       address: salon?.address || '',
       date: new Date().toISOString().split('T')[0],
       time: 'Walk-in',
@@ -175,7 +175,7 @@ const allStaff = [
     
     const queryParams = new URLSearchParams({
       id: bookingId,
-      salon: salon?.name || 'Green Saloon',
+      salon: salon?.name || 'Great Cuts',
       queue: queueNumber.toString(),
       waitTime: actualWaitTime.toString()
     });
